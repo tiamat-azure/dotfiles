@@ -215,5 +215,8 @@ alias now='date +"%F %T"'
 alias zp='ls ~/.oh-my-zsh/plugins'
 alias zpi='ls ~/.oh-my-zsh/plugins | grep '
 
+# Kubernetes
+alias kube='kubectl'
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
