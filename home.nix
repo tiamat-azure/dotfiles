@@ -1,5 +1,12 @@
-{ pkgs, ... }:
+{ pkgs, nixgl, system, ... }:
 
+let
+  # Hors NixOS, wezterm ne trouve pas libEGL au runtime (pas de /run/opengl-driver).
+  # On le fait passer par nixGL, qui injecte les bonnes libs Mesa/Intel.
+  wezterm-gl = pkgs.writeShellScriptBin "wezterm" ''
+    exec ${nixgl.packages.${system}.nixGLIntel}/bin/nixGLIntel ${pkgs.wezterm}/bin/wezterm "$@"
+  '';
+in
 {
   nixpkgs.config.allowUnfree = true;
 
@@ -15,7 +22,7 @@
     fd
     bat
     htop
-    wezterm
+    wezterm-gl
   ];
 
   programs.home-manager.enable = true;
