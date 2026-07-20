@@ -37,7 +37,47 @@ in
 
   programs.home-manager.enable = true;
 
-  # Edit-in-place à la Kun Chen : le vrai fichier reste dans le repo,
+  programs.zsh = {
+    enable = true;
+    autosuggestion.enable = true;      # ghost text from history
+    syntaxHighlighting.enable = true;  # commands turn green when valid
+    #initContent = ''
+    #  bindkey '^f' autosuggest-accept
+    #'';
+    initContent = ''
+      mkcd() { mkdir -p "$1" && cd "$1"; }
+    '';
+    shellAliases = {
+      ".." = "cd ..";
+      "..." = "cd ../../../";
+      "...." = "cd ../../../../";
+
+      myip = "curl http://ipecho.net/plain; echo"; # Show my ip address
+
+      # handy short cuts #
+      ll = "ls -la";
+      c = "clear";
+      h = "history";
+      hs = "history | grep";
+      j = "jobs -l";
+
+      # Stop after sending count ECHO_REQUEST packets #
+      ping = "ping -c 5";
+
+      ## Date and Time Aliases
+      d = ''date +"%F"'';
+      now = ''date +"%F %T"'';
+
+      add = "git add .";
+      push = "git push";
+      pull = "git pull";
+      m = "git switch main";
+      cc = "claude --dangerously-skip-permissions";
+      co = "codex --full-auto";
+    };
+  };
+
+  # Edit-in-place : le vrai fichier reste dans le repo,
   # ~/.config/wezterm n'est qu'un lien vers lui (pas de rebuild pour l'éditer).
   home.file.".config/wezterm".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/wezterm";
