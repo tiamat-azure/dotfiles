@@ -31,6 +31,7 @@ in
     lazygit
     neovim
     nerd-fonts.hack # the font everything renders in
+    wl-clipboard # nvim's unnamedplus clipboard, needed on Wayland
   ];
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
@@ -41,11 +42,9 @@ in
     enable = true;
     autosuggestion.enable = true;      # ghost text from history
     syntaxHighlighting.enable = true;  # commands turn green when valid
-    #initContent = ''
-    #  bindkey '^f' autosuggest-accept
-    #'';
     initContent = ''
       mkcd() { mkdir -p "$1" && cd "$1"; }
+      bindkey '^q' autosuggest-accept
     '';
     shellAliases = {
       ".." = "cd ..";
@@ -68,6 +67,7 @@ in
       d = ''date +"%F"'';
       now = ''date +"%F %T"'';
 
+      status = "git status";
       add = "git add .";
       push = "git push";
       pull = "git pull";
@@ -77,10 +77,37 @@ in
     };
   };
 
-  # Edit-in-place : le vrai fichier reste dans le repo,
-  # ~/.config/wezterm n'est qu'un lien vers lui (pas de rebuild pour l'éditer).
+  programs.starship = {
+    enable = true;
+    settings = {
+      add_newline = false;
+      format = "$directory$git_branch$git_status$cmd_duration$line_break$character";
+      character = {
+        success_symbol = "[❯](purple)";
+        error_symbol = "[❯](red)";
+      };
+      cmd_duration.format = "[$duration]($style) ";
+    };
+  };
+
+  # Edit-in-place: the real file stays in my repo, ~/.config just points at it.
   home.file.".config/wezterm".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/wezterm";
+  home.file.".config/nvim".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/nvim";
+  home.file.".config/herdr".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/herdr";
+  home.file.".claude/settings.json".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/settings.json";
+  home.file.".claude/statusline-command.sh".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/statusline-command.sh";
+
+  home.file.".claude/CLAUDE.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+  home.file.".codex/AGENTS.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+  home.file.".config/opencode/AGENTS.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
 
   # Équivalent GNOME des system.defaults de nix-darwin (dark mode, dock, trackpad...).
   dconf.settings = {
