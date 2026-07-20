@@ -20,14 +20,20 @@ in
   home.stateVersion = "26.05";
 
   home.packages = with pkgs; [
-    ripgrep
-    fd
+    # cli i use constantly
     bat
     htop
     wezterm-gl
-    nerd-fonts.hack
+    ripgrep   # fast search
+    fd        # fast find
+    fzf       # fuzzy finder
+    jq        # json on the command line
+    lazygit
+    neovim
+    nerd-fonts.hack # the font everything renders in
   ];
   fonts.fontconfig.enable = true;
+  home.sessionVariables.EDITOR = "nvim";
 
   programs.home-manager.enable = true;
 
