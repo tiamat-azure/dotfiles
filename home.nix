@@ -1,4 +1,4 @@
-{ pkgs, nixgl, system, ... }:
+{ config, pkgs, nixgl, system, ... }:
 
 let
   # Hors NixOS, wezterm ne trouve pas libEGL au runtime (pas de /run/opengl-driver).
@@ -6,6 +6,8 @@ let
   wezterm-gl = pkgs.writeShellScriptBin "wezterm" ''
     exec ${nixgl.packages.${system}.nixGLIntel}/bin/nixGLIntel ${pkgs.wezterm}/bin/wezterm "$@"
   '';
+
+  dotfiles = "${config.home.homeDirectory}/.dotfiles";
 in
 {
   nixpkgs.config.allowUnfree = true;
@@ -23,9 +25,16 @@ in
     bat
     htop
     wezterm-gl
+    nerd-fonts.hack
   ];
+  fonts.fontconfig.enable = true;
 
   programs.home-manager.enable = true;
+
+  # Edit-in-place à la Kun Chen : le vrai fichier reste dans le repo,
+  # ~/.config/wezterm n'est qu'un lien vers lui (pas de rebuild pour l'éditer).
+  home.file.".config/wezterm".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/wezterm";
 
   # Équivalent GNOME des system.defaults de nix-darwin (dark mode, dock, trackpad...).
   dconf.settings = {
