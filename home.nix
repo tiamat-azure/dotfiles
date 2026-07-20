@@ -42,10 +42,17 @@ in
     enable = true;
     autosuggestion.enable = true;      # ghost text from history
     syntaxHighlighting.enable = true;  # commands turn green when valid
-    initContent = ''
-      mkcd() { mkdir -p "$1" && cd "$1"; }
-      bindkey '^q' autosuggest-accept
-    '';
+    initContent = pkgs.lib.mkMerge [
+      # Doit s'exécuter avant que le plugin zsh-autosuggestions ne soit sourcé (ordre 700)
+      # pour que expand-or-complete (Tab) soit repris dans le mécanisme d'acceptation :
+      # suggestion présente -> accepte puis complète ; sinon -> complétion normale inchangée.
+      (pkgs.lib.mkOrder 690 ''
+        ZSH_AUTOSUGGEST_ACCEPT_WIDGETS+=(expand-or-complete)
+      '')
+      ''
+        mkcd() { mkdir -p "$1" && cd "$1"; }
+      ''
+    ];
     shellAliases = {
       ".." = "cd ..";
       "..." = "cd ../../../";
