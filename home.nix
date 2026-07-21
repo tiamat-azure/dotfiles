@@ -38,6 +38,23 @@ in
 
   programs.home-manager.enable = true;
 
+  xdg.desktopEntries.wezterm = {
+    name = "WezTerm";
+    genericName = "Terminal Emulator";
+    comment = "GPU-accelerated terminal emulator";
+    exec = "wezterm";
+    icon = "org.wezfurlong.wezterm";
+    terminal = false;
+    categories = [
+      "System"
+      "TerminalEmulator"
+    ];
+    startupNotify = true;
+    settings = {
+      StartupWMClass = "org.wezfurlong.wezterm";
+    };
+  };
+
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;      # ghost text from history
