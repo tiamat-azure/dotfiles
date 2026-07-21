@@ -2,7 +2,7 @@
 
 The following decisions are intentional. Do NOT silently revert them.
 
-<decision 1>
+- The `ll` alias (`shellAliases` in `home.nix`) intentionally uses `ls -lao` instead of `ls -la`: the `-o` flag suppresses the group column to keep output concise. Do not revert to `-la`.
 
 ## Maintaining this file
 

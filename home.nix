@@ -76,7 +76,7 @@ in
       myip = "curl http://ipecho.net/plain; echo"; # Show my ip address
 
       # handy short cuts #
-      ll = "ls -la";
+      ll = "ls -lao";
       c = "clear";
       h = "history";
       hs = "history | grep";
