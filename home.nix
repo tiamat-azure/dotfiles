@@ -33,27 +33,25 @@ in
     nerd-fonts.hack # the font everything renders in
     wl-clipboard # nvim's unnamedplus clipboard, needed on Wayland
   ];
+
+  # Icône dans le menu d'applications GNOME. pkgs.wezterm n'est pas dans
+  # home.packages (collision avec le wrapper wezterm-gl sur bin/wezterm) :
+  # on référence directement son icône, l'Exec passe par le wrapper nixGL.
+  xdg.desktopEntries.wezterm = {
+    name = "WezTerm";
+    genericName = "Terminal Emulator";
+    comment = "Wez's Terminal Emulator";
+    icon = "${pkgs.wezterm}/share/icons/hicolor/128x128/apps/org.wezfurlong.wezterm.png";
+    exec = "wezterm start --cwd .";
+    terminal = false;
+    categories = [ "System" "TerminalEmulator" "Utility" ];
+    startupNotify = true;
+    settings.StartupWMClass = "org.wezfurlong.wezterm";
+  };
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
 
   programs.home-manager.enable = true;
-
-  xdg.desktopEntries.wezterm = {
-    name = "WezTerm";
-    genericName = "Terminal Emulator";
-    comment = "GPU-accelerated terminal emulator";
-    exec = "wezterm";
-    icon = "org.wezfurlong.wezterm";
-    terminal = false;
-    categories = [
-      "System"
-      "TerminalEmulator"
-    ];
-    startupNotify = true;
-    settings = {
-      StartupWMClass = "org.wezfurlong.wezterm";
-    };
-  };
 
   programs.zsh = {
     enable = true;
