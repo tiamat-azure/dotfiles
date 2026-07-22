@@ -1,4 +1,4 @@
-{ config, pkgs, nixgl, system, ... }:
+{ config, pkgs, nixgl, system, pkgs-unstable, ... }:
 
 let
   # Hors NixOS, wezterm ne trouve pas libEGL au runtime (pas de /run/opengl-driver).
@@ -32,6 +32,7 @@ in
     neovim
     nerd-fonts.hack # the font everything renders in
     wl-clipboard # nvim's unnamedplus clipboard, needed on Wayland
+    pkgs-unstable.herdr # absent du channel stable pinné, pris sur nixpkgs-unstable
   ];
 
   # Icône dans le menu d'applications GNOME. pkgs.wezterm n'est pas dans
