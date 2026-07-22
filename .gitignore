@@ -1,0 +1,5 @@
+# herdr : fichiers d'exécution/runtime, pas de config à versionner
+home/.config/herdr/herdr-client.log
+home/.config/herdr/herdr-server.log
+home/.config/herdr/release-notes.json
+home/.config/herdr/session.json
