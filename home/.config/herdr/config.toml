@@ -1,5 +1,12 @@
 onboarding = false
 
+[terminal]
+# Sans ceci, herdr retombe sur $SHELL puis /bin/sh ; wezterm-gui (lancé depuis
+# l'entrée de bureau GNOME, hors session de login) n'exporte pas $SHELL, donc
+# les panes herdr tournaient sous /bin/sh et ne chargeaient jamais ~/.zshrc
+# (et donc aucun alias défini via programs.zsh.shellAliases).
+default_shell = "/usr/bin/zsh"
+
 [ui.toast]
 delivery = "system"
 
