@@ -111,6 +111,7 @@ config.keys = {
     action = act.ActivateKeyTable({
       name = "multiplex",
       one_shot = false,
+      timeout_milliseconds = 1000,
     }),
   },
   {
