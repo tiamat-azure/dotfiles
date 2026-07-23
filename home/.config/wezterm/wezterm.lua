@@ -120,6 +120,15 @@ config.keys = {
   },
 }
 
+-- Souris
+config.mouse_bindings = {
+  {
+    event = { Down = { streak = 1, button = "Middle" } },
+    mods = "NONE",
+    action = act.PasteFrom("Clipboard"),
+  },
+}
+
 return config
 
 
