@@ -136,7 +136,7 @@ in
   home.file.".claude/statusline-command.sh".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/statusline-command.sh";
   home.file.".claude/skills/git-commit-push".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.agent/skills/git-commit-push";
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.agents/skills/git-commit-push";
 
   home.file.".claude/CLAUDE.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
