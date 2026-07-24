@@ -108,6 +108,10 @@ in
       co = "codex --full-auto";
 
       herdrw = "wezterm cli spawn --new-window -- herdr"; # herdr dans une nouvelle fenêtre WezTerm
+
+      gpstop = "sudo systemctl stop gpd.service";
+      gpstart = "sudo systemctl start gpd.service";
+      gpstatus = "systemctl status gpd.service";
     };
   };
 
