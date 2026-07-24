@@ -1,29 +1,30 @@
 {
-  "effortLevel": "high",
   "hooks": {
     "SessionStart": [
       {
+        "matcher": "*",
         "hooks": [
           {
+            "type": "command",
             "command": "bash '/home/2456bru/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10,
-            "type": "command"
+            "timeout": 10
           }
-        ],
-        "matcher": "*"
+        ]
       }
     ]
   },
-  "language": "fr",
-  "skipDangerousModePermissionPrompt": true,
   "statusLine": {
-    "command": "bash ~/.claude/statusline-command.sh",
-    "type": "command"
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
   },
-  "theme": "dark",
+  "language": "fr",
+  "effortLevel": "high",
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
-  "voiceEnabled": true
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "voiceEnabled": true,
+  "model": "sonnet"
 }
