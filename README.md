@@ -1,5 +1,7 @@
 # dotfiles
 
+![landscape](images/landscape.png)
+
 Inspired by [Kun Chen's Mac dotfiles walkthrough](https://youtu.be/5N-okeDdIuI), adapted for **Ubuntu 26** (not NixOS) using standalone [home-manager](https://nix-community.github.io/home-manager/).
 
 One repo, one command, and the machine ends up configured the same way every time.
