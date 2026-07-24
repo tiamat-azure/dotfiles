@@ -10,7 +10,7 @@ One repo, one command, and the machine ends up configured the same way every tim
 
 Running the switch builds:
 
-- Nix user packages: `ripgrep`, `fd`, `bat`, `htop`, `fzf`, `jq`, `lazygit`, `neovim`, `wezterm`, `Hack Nerd Font`
+- Nix user packages: `ripgrep`, `fd`, `bat`, `htop`, `fzf`, `jq`, `lazygit`, `neovim`, `wezterm`, `Hack Nerd Font`, `OpenWhispr`
 - Terminal (WezTerm, edit-in-place config, rose-pine moon theme) — wrapped through [nixGL](https://github.com/nix-community/nixGL) since Nix packages can't find the system's OpenGL/EGL driver outside NixOS
 - GNOME desktop settings via `dconf` (dark mode, fast key repeat, tap-to-click, dock auto-hide, list view in Nautilus) — the closest equivalent to nix-darwin's `system.defaults` on this OS
 - `$EDITOR` set to `nvim`

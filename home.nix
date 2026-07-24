@@ -7,6 +7,8 @@ let
     exec ${nixgl.packages.${system}.nixGLIntel}/bin/nixGLIntel ${pkgs.wezterm}/bin/wezterm "$@"
   '';
 
+  openwhispr = pkgs.callPackage ./pkgs/openwhispr.nix { };
+
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
 in
 {
@@ -33,6 +35,7 @@ in
     nerd-fonts.hack # the font everything renders in
     wl-clipboard # nvim's unnamedplus clipboard, needed on Wayland
     pkgs-unstable.herdr # absent du channel stable pinné, pris sur nixpkgs-unstable
+    openwhispr
   ];
 
   # Icône dans le menu d'applications GNOME. pkgs.wezterm n'est pas dans
