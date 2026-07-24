@@ -67,6 +67,12 @@ in
       '')
       ''
         mkcd() { mkdir -p "$1" && cd "$1"; }
+
+        # nvm gère son propre installeur en ~/.nvm ; son script d'install ne peut
+        # pas s'ajouter tout seul au .zshrc (symlink en lecture seule vers le Nix
+        # store), donc on le source ici pour que node/npm soient dispo par défaut.
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
       ''
     ];
     shellAliases = {
