@@ -3,6 +3,7 @@
 - Never use the em dash ("—"). Use a plain hyphen ("-") instead.
 - Never add your agent name as a co-author in commit messages.
 - Always use conventional commit + appropriate emoji prefix in commit message
+- Be concise in your responses
 - Never manually modify `CHANGELOG.md` or any file marked as auto-generated.
 - When making technical decisions, prioritize quality, simplicity, robustness, scalability, and long-term maintainability over development cost.
 - When fixing a bug, first reproduce it in an end-to-end scenario that matches the end-user experience as closely as possible. Base your diagnosis and fix on that reproduction.
