@@ -25,6 +25,5 @@
   },
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
-  "voiceEnabled": true,
-  "model": "sonnet"
+  "voiceEnabled": true
 }
