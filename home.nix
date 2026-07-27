@@ -109,9 +109,13 @@ in
 
       herdrw = "wezterm cli spawn --new-window -- herdr"; # herdr dans une nouvelle fenêtre WezTerm
 
+      # Global Protect
       gpstop = "sudo systemctl stop gpd.service";
       gpstart = "sudo systemctl start gpd.service";
       gpstatus = "systemctl status gpd.service";
+
+      # Herdr
+      hreload = "herdr server reload-config";
     };
   };
 
