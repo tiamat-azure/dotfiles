@@ -175,6 +175,6 @@ in
 
     # Ajoute WINDOWS+SHIFT+S en plus de la touche Impr écran par défaut,
     # pour ouvrir l'outil de capture (sélection de zone) comme sous Windows.
-    "org/gnome/shell/keybindings".screenshot-ui = [ "Print" "<Super><Shift>s" ];
+    "org/gnome/shell/keybindings".show-screenshot-ui = [ "Print" "<Super><Shift>s" ];
   };
 }
