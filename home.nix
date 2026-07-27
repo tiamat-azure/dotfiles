@@ -10,6 +10,18 @@ let
   openwhispr = pkgs.callPackage ./pkgs/openwhispr.nix { };
 
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
+
+  # Surveille le dossier Images et copie le chemin de chaque nouvelle capture
+  # d'écran dans le presse-papier texte (les terminaux ne collent pas les
+  # images du presse-papier, mais collent volontiers un chemin de fichier).
+  screenshot-clip-watch = pkgs.writeShellScriptBin "screenshot-clip-watch" ''
+    set -eu
+    pictures_dir="$(${pkgs.xdg-user-dirs}/bin/xdg-user-dir PICTURES)"
+    ${pkgs.inotify-tools}/bin/inotifywait -m -r -e close_write --format '%w%f' "$pictures_dir" |
+      while read -r file; do
+        printf '%s' "$file" | ${pkgs.wl-clipboard}/bin/wl-copy
+      done
+  '';
 in
 {
   nixpkgs.config.allowUnfree = true;
@@ -176,5 +188,12 @@ in
     # Ajoute WINDOWS+SHIFT+S en plus de la touche Impr écran par défaut,
     # pour ouvrir l'outil de capture (sélection de zone) comme sous Windows.
     "org/gnome/shell/keybindings".show-screenshot-ui = [ "Print" "<Super><Shift>s" ];
+  };
+
+  systemd.user.services.screenshot-clip-watch = {
+    Unit.Description = "Copie le chemin des nouvelles captures d'écran dans le presse-papier";
+    Service.ExecStart = "${screenshot-clip-watch}/bin/screenshot-clip-watch";
+    Service.Restart = "on-failure";
+    Install.WantedBy = [ "graphical-session.target" ];
   };
 }
