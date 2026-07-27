@@ -119,6 +119,19 @@ config.keys = {
     mods = "CTRL|SHIFT",
     action = act.ReloadConfiguration,
   },
+  -- WezTerm capte CTRL+Tab / CTRL+SHIFT+Tab pour ses propres onglets par
+  -- défaut ; on les laisse passer au programme du pane (herdr) qui gère
+  -- sa propre navigation d'onglets sur ces mêmes raccourcis.
+  {
+    key = "Tab",
+    mods = "CTRL",
+    action = act.SendKey({ key = "Tab", mods = "CTRL" }),
+  },
+  {
+    key = "Tab",
+    mods = "CTRL|SHIFT",
+    action = act.SendKey({ key = "Tab", mods = "CTRL|SHIFT" }),
+  },
 }
 
 -- Souris
