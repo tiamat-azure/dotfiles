@@ -1,10 +1,16 @@
 #!/bin/bash
-# Claude Code status line: model name + context window usage percentage
+# Claude Code status line: model name + effort level + context window usage percentage
 # + current context token count + cumulative session token count
+
+# Force a C decimal separator so printf '%.0f' accepts jq's dotted floats.
+export LC_NUMERIC=C
 
 input=$(cat)
 
 model=$(echo "$input" | jq -r '.model.display_name')
+# Effort level is only reported for models that support it.
+effort=$(echo "$input" | jq -r '.effort.level // empty')
+[ -n "$effort" ] && model="$model ($effort)"
 used=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 current_tokens=$(echo "$input" | jq -r '((.context_window.total_input_tokens // 0) + (.context_window.total_output_tokens // 0))')
 transcript_path=$(echo "$input" | jq -r '.transcript_path // empty')
