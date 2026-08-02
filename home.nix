@@ -46,6 +46,7 @@ in
     neovim
     nerd-fonts.hack # the font everything renders in
     wl-clipboard # nvim's unnamedplus clipboard, needed on Wayland
+    uv # python package/project manager
     pkgs-unstable.herdr # absent du channel stable pinné, pris sur nixpkgs-unstable
     openwhispr
   ];
