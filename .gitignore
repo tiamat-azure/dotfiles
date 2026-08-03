@@ -3,3 +3,6 @@ home/.config/herdr/herdr-client.log
 home/.config/herdr/herdr-server.log
 home/.config/herdr/release-notes.json
 home/.config/herdr/session.json
+
+# serena : artefacts d'outillage agent (index, memories, config générée)
+.serena/
