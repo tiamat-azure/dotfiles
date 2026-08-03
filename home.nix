@@ -47,6 +47,7 @@ in
     nerd-fonts.hack # the font everything renders in
     wl-clipboard # nvim's unnamedplus clipboard, needed on Wayland
     uv # python package/project manager
+    rtk # proxy CLI qui compresse la sortie des commandes lues par les agents
     pkgs-unstable.herdr # absent du channel stable pinné, pris sur nixpkgs-unstable
     openwhispr
   ];
@@ -154,6 +155,10 @@ in
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/herdr";
   home.file.".claude/settings.json".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/settings.json";
+  # Consignes d'usage de rtk, référencées depuis AGENTS.md via @RTK.md.
+  # Régénérable avec `rtk init -g` (qui écrirait alors un fichier hors du repo).
+  home.file.".claude/RTK.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/RTK.md";
   home.file.".claude/statusline-command.sh".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/statusline-command.sh";
   home.file.".agents/skills/git-commit-push".source =
