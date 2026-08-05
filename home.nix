@@ -10,6 +10,18 @@ let
   openwhispr = pkgs.callPackage ./pkgs/openwhispr.nix { };
 
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
+  link = path: config.lib.file.mkOutOfStoreSymlink "${dotfiles}/${path}";
+
+  # Les skills vivent une seule fois dans le repo, mais chaque agent les cherche
+  # dans son propre répertoire : ~/.agents/skills pour les agents génériques,
+  # ~/.claude/skills pour Claude Code. D'où les deux liens par skill.
+  skills = [ "git-commit-push" "memorise" ];
+  skillLinks = lib.listToAttrs (lib.concatMap
+    (skill: [
+      (lib.nameValuePair ".agents/skills/${skill}" { source = link "home/.agents/skills/${skill}"; })
+      (lib.nameValuePair ".claude/skills/${skill}" { source = link "home/.agents/skills/${skill}"; })
+    ])
+    skills);
 
   # Surveille le dossier Images et copie le chemin de chaque nouvelle capture
   # d'écran dans le presse-papier texte (les terminaux ne collent pas les
@@ -180,39 +192,24 @@ in
   };
 
   # Edit-in-place: the real file stays in my repo, ~/.config just points at it.
-  home.file.".config/wezterm".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/wezterm";
-  home.file.".config/nvim".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/nvim";
-  home.file.".config/herdr".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/herdr";
-  home.file.".claude/settings.json".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/settings.json";
-  # Consignes d'usage de rtk, référencées depuis AGENTS.md via @RTK.md.
-  # Régénérable avec `rtk init -g` (qui écrirait alors un fichier hors du repo).
-  home.file.".claude/RTK.md".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/RTK.md";
-  # Dépannage rtk : volontairement pas importé via @, seulement référencé par
-  # chemin depuis RTK.md, pour rester hors du contexte injecté à chaque session.
-  home.file.".claude/rtk-troubleshooting.md".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/rtk-troubleshooting.md";
-  home.file.".claude/statusline-command.sh".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/statusline-command.sh";
-  home.file.".agents/skills/git-commit-push".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.agents/skills/git-commit-push";
-  home.file.".claude/skills/git-commit-push".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.agents/skills/git-commit-push";
-  home.file.".agents/skills/memorise".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.agents/skills/memorise";
-  home.file.".claude/skills/memorise".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.agents/skills/memorise";
+  home.file = {
+    ".config/wezterm".source = link "home/.config/wezterm";
+    ".config/nvim".source = link "home/.config/nvim";
+    ".config/herdr".source = link "home/.config/herdr";
+    ".claude/settings.json".source = link "home/.claude/settings.json";
+    # Consignes d'usage de rtk, référencées depuis AGENTS.md via @RTK.md.
+    # Régénérable avec `rtk init -g` (qui écrirait alors un fichier hors du repo).
+    ".claude/RTK.md".source = link "home/.claude/RTK.md";
+    # Dépannage rtk : volontairement pas importé via @, seulement référencé par
+    # chemin depuis RTK.md, pour rester hors du contexte injecté à chaque session.
+    ".claude/rtk-troubleshooting.md".source = link "home/.claude/rtk-troubleshooting.md";
+    ".claude/statusline-command.sh".source = link "home/.claude/statusline-command.sh";
 
-  home.file.".claude/CLAUDE.md".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
-  home.file.".codex/AGENTS.md".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
-  home.file.".config/opencode/AGENTS.md".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+    # Un seul AGENTS.md dans le repo, exposé sous le nom attendu par chaque agent.
+    ".claude/CLAUDE.md".source = link "home/AGENTS.md";
+    ".codex/AGENTS.md".source = link "home/AGENTS.md";
+    ".config/opencode/AGENTS.md".source = link "home/AGENTS.md";
+  } // skillLinks;
 
   # Équivalent GNOME des system.defaults de nix-darwin (dark mode, dock, trackpad...).
   # Réservé aux machines desktop : pas de session GNOME/dbus sous WSL.
