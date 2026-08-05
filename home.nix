@@ -170,6 +170,10 @@ in
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.agents/skills/git-commit-push";
   home.file.".claude/skills/git-commit-push".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.agents/skills/git-commit-push";
+  home.file.".agents/skills/memorise".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.agents/skills/memorise";
+  home.file.".claude/skills/memorise".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.agents/skills/memorise";
 
   home.file.".claude/CLAUDE.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
