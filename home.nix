@@ -1,4 +1,4 @@
-{ config, pkgs, nixgl, system, pkgs-unstable, ... }:
+{ config, pkgs, lib, nixgl, system, pkgs-unstable, username, desktop, ... }:
 
 let
   # Hors NixOS, wezterm ne trouve pas libEGL au runtime (pas de /run/opengl-driver).
@@ -26,8 +26,8 @@ in
 {
   nixpkgs.config.allowUnfree = true;
 
-  home.username = "2456bru";
-  home.homeDirectory = "/home/2456bru";
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
 
   # Ne change jamais cette valeur après la première install :
   # https://nix-community.github.io/home-manager/index.xhtml#sec-install-standalone
@@ -37,7 +37,6 @@ in
     # cli i use constantly
     bat
     htop
-    wezterm-gl
     ripgrep   # fast search
     fd        # fast find
     fzf       # fuzzy finder
@@ -48,23 +47,28 @@ in
     wl-clipboard # nvim's unnamedplus clipboard, needed on Wayland
     uv # python package/project manager
     rtk # proxy CLI qui compresse la sortie des commandes lues par les agents
-    pkgs-unstable.herdr # absent du channel stable pinné, pris sur nixpkgs-unstable
+  ] ++ lib.optionals desktop [
+    # Paquets GUI : GPU réel requis (nixGL) / session graphique. Hors WSL.
+    wezterm-gl
     openwhispr
+    pkgs-unstable.herdr # absent du channel stable pinné, pris sur nixpkgs-unstable
   ];
 
   # Icône dans le menu d'applications GNOME. pkgs.wezterm n'est pas dans
   # home.packages (collision avec le wrapper wezterm-gl sur bin/wezterm) :
   # on référence directement son icône, l'Exec passe par le wrapper nixGL.
-  xdg.desktopEntries.wezterm = {
-    name = "WezTerm";
-    genericName = "Terminal Emulator";
-    comment = "Wez's Terminal Emulator";
-    icon = "${pkgs.wezterm}/share/icons/hicolor/128x128/apps/org.wezfurlong.wezterm.png";
-    exec = "wezterm start --cwd .";
-    terminal = false;
-    categories = [ "System" "TerminalEmulator" "Utility" ];
-    startupNotify = true;
-    settings.StartupWMClass = "org.wezfurlong.wezterm";
+  xdg.desktopEntries = lib.mkIf desktop {
+    wezterm = {
+      name = "WezTerm";
+      genericName = "Terminal Emulator";
+      comment = "Wez's Terminal Emulator";
+      icon = "${pkgs.wezterm}/share/icons/hicolor/128x128/apps/org.wezfurlong.wezterm.png";
+      exec = "wezterm start --cwd .";
+      terminal = false;
+      categories = [ "System" "TerminalEmulator" "Utility" ];
+      startupNotify = true;
+      settings.StartupWMClass = "org.wezfurlong.wezterm";
+    };
   };
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
@@ -120,7 +124,8 @@ in
       m = "git switch main";
       cc = "claude --dangerously-skip-permissions";
       co = "codex --full-auto";
-
+    } // lib.optionalAttrs desktop {
+      # Dépendent de WezTerm, herdr ou du VPN de la machine desktop : hors WSL.
       herdrw = "wezterm cli spawn --new-window -- herdr"; # herdr dans une nouvelle fenêtre WezTerm
 
       # Global Protect
@@ -174,7 +179,8 @@ in
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
 
   # Équivalent GNOME des system.defaults de nix-darwin (dark mode, dock, trackpad...).
-  dconf.settings = {
+  # Réservé aux machines desktop : pas de session GNOME/dbus sous WSL.
+  dconf.settings = lib.mkIf desktop {
     "org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
     "org/gnome/desktop/peripherals/keyboard" = {
@@ -196,7 +202,7 @@ in
     "org/gnome/shell/keybindings".show-screenshot-ui = [ "Print" "<Super><Shift>s" ];
   };
 
-  systemd.user.services.screenshot-clip-watch = {
+  systemd.user.services.screenshot-clip-watch = lib.mkIf desktop {
     Unit.Description = "Copie le chemin des nouvelles captures d'écran dans le presse-papier";
     Service.ExecStart = "${screenshot-clip-watch}/bin/screenshot-clip-watch";
     Service.Restart = "on-failure";
