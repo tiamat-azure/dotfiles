@@ -164,6 +164,10 @@ in
   # Régénérable avec `rtk init -g` (qui écrirait alors un fichier hors du repo).
   home.file.".claude/RTK.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/RTK.md";
+  # Dépannage rtk : volontairement pas importé via @, seulement référencé par
+  # chemin depuis RTK.md, pour rester hors du contexte injecté à chaque session.
+  home.file.".claude/rtk-troubleshooting.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/rtk-troubleshooting.md";
   home.file.".claude/statusline-command.sh".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/statusline-command.sh";
   home.file.".agents/skills/git-commit-push".source =
