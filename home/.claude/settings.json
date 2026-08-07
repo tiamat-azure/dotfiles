@@ -1,8 +1,12 @@
 {
-  "model": "opus",
+  "env": {
+    "ANTHROPIC_BASE_URL": "http://127.0.0.1:8787",
+    "ENABLE_TOOL_SEARCH": "true"
+  },
   "permissions": {
     "defaultMode": "auto"
   },
+  "model": "sonnet",
   "hooks": {
     "SessionStart": [
       {
@@ -77,21 +81,8 @@
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
   },
-  "language": "fr",
-  "effortLevel": "low",
-  "voice": {
-    "enabled": true,
-    "mode": "hold"
-  },
-  "skipDangerousModePermissionPrompt": true,
-  "theme": "dark",
-  "voiceEnabled": true,
-  "env": {
-    "ANTHROPIC_BASE_URL": "http://127.0.0.1:8787",
-    "ENABLE_TOOL_SEARCH": "true"
-  },
   "enabledPlugins": {
-    "caveman@caveman": true,
+    "caveman@caveman": false,
     "headroom@headroom-marketplace": true
   },
   "extraKnownMarketplaces": {
@@ -107,5 +98,14 @@
         "repo": "chopratejas/headroom"
       }
     }
-  }
+  },
+  "language": "fr",
+  "effortLevel": "low",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "voiceEnabled": true
 }
