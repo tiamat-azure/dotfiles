@@ -89,6 +89,30 @@ in
       ''
         mkcd() { mkdir -p "$1" && cd "$1"; }
 
+        # ff : recherche récursive interactive par nom de fichier (fzf + preview bat),
+        # ouvre le fichier choisi dans $EDITOR.
+        ff() {
+          local file
+          file=$(fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always --style=numbers {}') || return
+          ''${EDITOR:-nvim} "$file"
+        }
+
+        # fg : recherche récursive interactive par mot-clé dans le contenu des fichiers
+        # (rg + fzf + preview bat avec la ligne surlignée), ouvre le résultat choisi
+        # dans $EDITOR directement à la bonne ligne.
+        fg() {
+          # ne pas nommer une locale "path" : c'est un paramètre spécial zsh
+          # lié au tableau $PATH, la déclarer localement le viderait.
+          local match file_path lnum
+          match=$(rg --line-number --hidden --glob '!.git' --color=always "''${1:-}" |
+            fzf --ansi --delimiter : \
+                --preview 'bat --color=always --style=numbers --highlight-line {2} {1}' \
+                --preview-window '+{2}-/2') || return
+          file_path="''${match%%:*}"
+          lnum="$(echo "$match" | cut -d: -f2)"
+          ''${EDITOR:-nvim} "+$lnum" "$file_path"
+        }
+
         # nvm gère son propre installeur en ~/.nvm ; son script d'install ne peut
         # pas s'ajouter tout seul au .zshrc (symlink en lecture seule vers le Nix
         # store), donc on le source ici pour que node/npm soient dispo par défaut.
