@@ -198,6 +198,11 @@ in
 
     "org/gnome/desktop/peripherals/touchpad".tap-to-click = true;
 
+    # Autorise SUPER + clic-droit pour redimensionner une fenêtre (utile pour
+    # WezTerm, sans barre de titre, dont window_decorations = "NONE" masque
+    # les poignées de redimensionnement natives).
+    "org/gnome/desktop/wm/preferences".resize-with-right-button = true;
+
     "org/gnome/shell/extensions/dash-to-dock" = {
       dock-fixed = false; # nécessaire pour l'auto-hide
       autohide = true;
