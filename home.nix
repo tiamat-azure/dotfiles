@@ -1,4 +1,4 @@
-{ config, pkgs, nixgl, system, pkgs-unstable, ... }:
+{ config, pkgs, lib, nixgl, system, pkgs-unstable, username, desktop, ... }:
 
 let
   # Hors NixOS, wezterm ne trouve pas libEGL au runtime (pas de /run/opengl-driver).
@@ -26,8 +26,8 @@ in
 {
   nixpkgs.config.allowUnfree = true;
 
-  home.username = "2456bru";
-  home.homeDirectory = "/home/2456bru";
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
 
   # Ne change jamais cette valeur après la première install :
   # https://nix-community.github.io/home-manager/index.xhtml#sec-install-standalone
@@ -37,7 +37,6 @@ in
     # cli i use constantly
     bat
     htop
-    wezterm-gl
     ripgrep   # fast search
     fd        # fast find
     fzf       # fuzzy finder
@@ -48,23 +47,28 @@ in
     wl-clipboard # nvim's unnamedplus clipboard, needed on Wayland
     uv # python package/project manager
     rtk # proxy CLI qui compresse la sortie des commandes lues par les agents
-    pkgs-unstable.herdr # absent du channel stable pinné, pris sur nixpkgs-unstable
+  ] ++ lib.optionals desktop [
+    # Paquets GUI : GPU réel requis (nixGL) / session graphique. Hors WSL.
+    wezterm-gl
     openwhispr
+    pkgs-unstable.herdr # absent du channel stable pinné, pris sur nixpkgs-unstable
   ];
 
   # Icône dans le menu d'applications GNOME. pkgs.wezterm n'est pas dans
   # home.packages (collision avec le wrapper wezterm-gl sur bin/wezterm) :
   # on référence directement son icône, l'Exec passe par le wrapper nixGL.
-  xdg.desktopEntries.wezterm = {
-    name = "WezTerm";
-    genericName = "Terminal Emulator";
-    comment = "Wez's Terminal Emulator";
-    icon = "${pkgs.wezterm}/share/icons/hicolor/128x128/apps/org.wezfurlong.wezterm.png";
-    exec = "wezterm start --cwd .";
-    terminal = false;
-    categories = [ "System" "TerminalEmulator" "Utility" ];
-    startupNotify = true;
-    settings.StartupWMClass = "org.wezfurlong.wezterm";
+  xdg.desktopEntries = lib.mkIf desktop {
+    wezterm = {
+      name = "WezTerm";
+      genericName = "Terminal Emulator";
+      comment = "Wez's Terminal Emulator";
+      icon = "${pkgs.wezterm}/share/icons/hicolor/128x128/apps/org.wezfurlong.wezterm.png";
+      exec = "wezterm start --cwd .";
+      terminal = false;
+      categories = [ "System" "TerminalEmulator" "Utility" ];
+      startupNotify = true;
+      settings.StartupWMClass = "org.wezfurlong.wezterm";
+    };
   };
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
@@ -84,6 +88,30 @@ in
       '')
       ''
         mkcd() { mkdir -p "$1" && cd "$1"; }
+
+        # ff : recherche récursive interactive par nom de fichier (fzf + preview bat),
+        # ouvre le fichier choisi dans $EDITOR.
+        ff() {
+          local file
+          file=$(fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always --style=numbers {}') || return
+          ''${EDITOR:-nvim} "$file"
+        }
+
+        # fg : recherche récursive interactive par mot-clé dans le contenu des fichiers
+        # (rg + fzf + preview bat avec la ligne surlignée), ouvre le résultat choisi
+        # dans $EDITOR directement à la bonne ligne.
+        fg() {
+          # ne pas nommer une locale "path" : c'est un paramètre spécial zsh
+          # lié au tableau $PATH, la déclarer localement le viderait.
+          local match file_path lnum
+          match=$(rg --line-number --hidden --glob '!.git' --color=always "''${1:-}" |
+            fzf --ansi --delimiter : \
+                --preview 'bat --color=always --style=numbers --highlight-line {2} {1}' \
+                --preview-window '+{2}-/2') || return
+          file_path="''${match%%:*}"
+          lnum="$(echo "$match" | cut -d: -f2)"
+          ''${EDITOR:-nvim} "+$lnum" "$file_path"
+        }
 
         # nvm gère son propre installeur en ~/.nvm ; son script d'install ne peut
         # pas s'ajouter tout seul au .zshrc (symlink en lecture seule vers le Nix
@@ -120,7 +148,8 @@ in
       m = "git switch main";
       cc = "claude --dangerously-skip-permissions";
       co = "codex --full-auto";
-
+    } // lib.optionalAttrs desktop {
+      # Dépendent de WezTerm, herdr ou du VPN de la machine desktop : hors WSL.
       herdrw = "wezterm cli spawn --new-window -- herdr"; # herdr dans une nouvelle fenêtre WezTerm
 
       # Global Protect
@@ -130,6 +159,10 @@ in
 
       # Herdr
       hreload = "herdr server reload-config";
+
+      # token-hud : widget PyQt6, lancé détaché pour rendre le terminal.
+      hud-start = "nohup uv run --project ${config.home.homeDirectory}/workspaces/tiamat-azure/token-hud python -m token_hud >/dev/null 2>&1 &";
+      hud-stop = "pkill -f 'python -m token_hud'";
     };
   };
 
@@ -159,6 +192,10 @@ in
   # Régénérable avec `rtk init -g` (qui écrirait alors un fichier hors du repo).
   home.file.".claude/RTK.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/RTK.md";
+  # Dépannage rtk : volontairement pas importé via @, seulement référencé par
+  # chemin depuis RTK.md, pour rester hors du contexte injecté à chaque session.
+  home.file.".claude/rtk-troubleshooting.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/rtk-troubleshooting.md";
   home.file.".claude/statusline-command.sh".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/statusline-command.sh";
   home.file.".agents/skills/git-commit-push".source =
@@ -178,7 +215,8 @@ in
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
 
   # Équivalent GNOME des system.defaults de nix-darwin (dark mode, dock, trackpad...).
-  dconf.settings = {
+  # Réservé aux machines desktop : pas de session GNOME/dbus sous WSL.
+  dconf.settings = lib.mkIf desktop {
     "org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
     "org/gnome/desktop/peripherals/keyboard" = {
@@ -187,6 +225,11 @@ in
     };
 
     "org/gnome/desktop/peripherals/touchpad".tap-to-click = true;
+
+    # Autorise SUPER + clic-droit pour redimensionner une fenêtre (utile pour
+    # WezTerm, sans barre de titre, dont window_decorations = "NONE" masque
+    # les poignées de redimensionnement natives).
+    "org/gnome/desktop/wm/preferences".resize-with-right-button = true;
 
     "org/gnome/shell/extensions/dash-to-dock" = {
       dock-fixed = false; # nécessaire pour l'auto-hide
@@ -200,7 +243,7 @@ in
     "org/gnome/shell/keybindings".show-screenshot-ui = [ "Print" "<Super><Shift>s" ];
   };
 
-  systemd.user.services.screenshot-clip-watch = {
+  systemd.user.services.screenshot-clip-watch = lib.mkIf desktop {
     Unit.Description = "Copie le chemin des nouvelles captures d'écran dans le presse-papier";
     Service.ExecStart = "${screenshot-clip-watch}/bin/screenshot-clip-watch";
     Service.Restart = "on-failure";

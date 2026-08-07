@@ -15,13 +15,21 @@
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixgl, ... }:
     let
       system = "x86_64-linux";
-      user = "2456bru";
       pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+      # Une config par machine : le même home.nix, paramétré par utilisateur et
+      # par `desktop` (les blocs GNOME/GUI ne s'appliquent que si desktop = true).
+      mkHome = { username, desktop }:
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.${system};
+          extraSpecialArgs = { inherit nixgl system pkgs-unstable username desktop; };
+          modules = [ ./home.nix ];
+        };
     in {
-      homeConfigurations.${user} = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${system};
-        extraSpecialArgs = { inherit nixgl system pkgs-unstable; };
-        modules = [ ./home.nix ];
+      homeConfigurations = {
+        # Portable : Ubuntu desktop natif (GNOME + WezTerm/nixGL + services GUI).
+        "2456bru" = mkHome { username = "2456bru"; desktop = true; };
+        # PC bureautique sous WSL2 : cœur CLI + symlinks, sans GNOME/GUI.
+        "tiamat" = mkHome { username = "tiamat"; desktop = false; };
       };
     };
 }
