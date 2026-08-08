@@ -48,6 +48,7 @@ in
   home.packages = with pkgs; [
     # cli i use constantly
     bat
+    glow      # rendu markdown dans le terminal
     htop
     ripgrep   # fast search
     fd        # fast find
@@ -143,9 +144,20 @@ in
         # qwen : interroge l'agent LLM distant Telscale (API Ollama).
         # Voir home/AGENTS.md > "Agent distant Telscale (Ollama)".
         qwen() {
-          http POST https://tiamat-wsl.tail9a63d9.ts.net/api/chat \
+          local verbose=0
+          if [ "$1" = "-v" ]; then
+            verbose=1
+            shift
+          fi
+          local resp
+          resp="$(http POST https://tiamat-wsl.tail9a63d9.ts.net/api/chat \
             model=qwen3-coder-16k:latest stream:=false \
-            messages:="[{\"role\":\"user\",\"content\":$(jq -Rn --arg m "$*" '$m')}]"
+            messages:="[{\"role\":\"user\",\"content\":$(jq -Rn --arg m "$*" '$m')}]")"
+          if [ "$verbose" = 1 ]; then
+            echo "$resp"
+          else
+            echo "$resp" | jq -r '.message.content' | glow -
+          fi
         }
 
         # nvm gère son propre installeur en ~/.nvm ; son script d'install ne peut
