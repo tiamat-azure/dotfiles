@@ -146,7 +146,7 @@ in
       push = "git push";
       pull = "git pull";
       m = "git switch main";
-      cc = "claude --dangerously-skip-permissions";
+      cc = ''claude --dangerously-skip-permissions --system-prompt "Tu es un assistant de code concis et précis."'';
       co = "codex --full-auto";
     } // lib.optionalAttrs desktop {
       # Dépendent de WezTerm, herdr ou du VPN de la machine desktop : hors WSL.
