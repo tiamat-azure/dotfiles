@@ -140,6 +140,14 @@ in
           ''${EDITOR:-nvim} "+$lnum" "$file_path"
         }
 
+        # qwen : interroge l'agent LLM distant Telscale (API Ollama).
+        # Voir home/AGENTS.md > "Agent distant Telscale (Ollama)".
+        qwen() {
+          http POST https://tiamat-wsl.tail9a63d9.ts.net/api/chat \
+            model=qwen3-coder-16k:latest stream:=false \
+            messages:="[{\"role\":\"user\",\"content\":$(jq -Rn --arg m "$*" '$m')}]"
+        }
+
         # nvm gère son propre installeur en ~/.nvm ; son script d'install ne peut
         # pas s'ajouter tout seul au .zshrc (symlink en lecture seule vers le Nix
         # store), donc on le source ici pour que node/npm soient dispo par défaut.
