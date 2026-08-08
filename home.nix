@@ -162,6 +162,8 @@ in
 
       myip = "curl http://ipecho.net/plain; echo"; # Show my ip address
 
+      source = "source ~/.zshrc";
+
       # handy short cuts #
       ll = "ls -lao";
       c = "clear";
