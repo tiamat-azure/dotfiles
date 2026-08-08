@@ -59,6 +59,7 @@ in
     wl-clipboard # nvim's unnamedplus clipboard, needed on Wayland
     uv # python package/project manager
     rtk # proxy CLI qui compresse la sortie des commandes lues par les agents
+    httpie # client HTTP en ligne de commande (https://httpie.io/docs/cli/universal)
   ] ++ lib.optionals desktop [
     # Paquets GUI : GPU réel requis (nixGL) / session graphique. Hors WSL.
     wezterm-gl
