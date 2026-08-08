@@ -41,16 +41,6 @@
         ]
       },
       {
-        "matcher": "startup|resume",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "command -v headroom >/dev/null && headroom init hook ensure --profile init-user --marker headroom-init-claude",
-            "timeout": 15
-          }
-        ]
-      },
-      {
         "matcher": "",
         "hooks": [
           {
@@ -78,11 +68,6 @@
           {
             "type": "command",
             "command": "rtk hook claude"
-          },
-          {
-            "type": "command",
-            "command": "command -v headroom >/dev/null && headroom init hook ensure --profile init-user --marker headroom-init-claude",
-            "timeout": 15
           }
         ]
       }
@@ -91,17 +76,6 @@
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
-  },
-  "enabledPlugins": {
-    "headroom@headroom-marketplace": true
-  },
-  "extraKnownMarketplaces": {
-    "headroom-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "chopratejas/headroom"
-      }
-    }
   },
   "language": "fr",
   "effortLevel": "low",

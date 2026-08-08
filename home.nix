@@ -59,7 +59,6 @@ in
     wl-clipboard # nvim's unnamedplus clipboard, needed on Wayland
     uv # python package/project manager
     rtk # proxy CLI qui compresse la sortie des commandes lues par les agents
-    pipx # installe headroom-ai dans un venv isolé, binaire exposé dans le PATH
   ] ++ lib.optionals desktop [
     # Paquets GUI : GPU réel requis (nixGL) / session graphique. Hors WSL.
     wezterm-gl
@@ -89,12 +88,9 @@ in
   programs.home-manager.enable = true;
 
   # Outils absents de nixpkgs, réinstallés à chaque switch pour rester reproductibles :
-  # - headroom-ai (pip) : couche de compression de contexte pour les agents.
   # - gh-axi / chrome-devtools-axi / lavish-axi (npm, via nvm) : CLIs "AXI" de kunchenguid
   #   utilisées par les hooks/skills Claude Code (voir home/.claude/settings.json et skills).
   home.activation.installAgentTools = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD ${pkgs.pipx}/bin/pipx install --force "headroom-ai[all]"
-
     export NVM_DIR="$HOME/.nvm"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
       \. "$NVM_DIR/nvm.sh"
