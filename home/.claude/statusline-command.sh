@@ -61,11 +61,44 @@ fmt_tokens() {
 current_fmt=$(fmt_tokens "$current_tokens")
 cumulative_fmt=$(fmt_tokens "$cumulative_tokens")
 
+# Neon 256-color codes for the traffic-light indicators.
+NEON_GREEN='\033[38;5;118m'
+NEON_ORANGE='\033[38;5;202m'
+NEON_RED='\033[38;5;196m'
+NEON_CYAN_BOLD='\033[1m\033[38;5;51m'
+NEON_PINK='\033[38;5;198m'
+RESET='\033[0m'
+
+# Pick a neon color given a value and its (low, high-inclusive) thresholds:
+# green below low, orange from low to high (inclusive), red above high.
+color_for() {
+    local value=$1 low=$2 high=$3
+    if awk -v v="$value" -v l="$low" 'BEGIN { exit !(v < l) }'; then
+        printf '%s' "$NEON_GREEN"
+    elif awk -v v="$value" -v h="$high" 'BEGIN { exit !(v <= h) }'; then
+        printf '%s' "$NEON_ORANGE"
+    else
+        printf '%s' "$NEON_RED"
+    fi
+}
+
 if [ -n "$used" ]; then
-    tokens_part=$(printf 'Tok: %s (%.0f%%)' "$current_fmt" "$used")
+    tok_color=$(color_for "$used" 20 40)
+    tokens_part=$(printf '\033[1m%bTok: %s (%.0f%%)%b' "$tok_color" "$current_fmt" "$used" "$RESET")
 else
     tokens_part=$(printf 'Tok: %s' "$current_fmt")
 fi
 
-printf '\033[2m%s\033[0m \033[2m|\033[0m \033[2m%s\033[0m \033[2m|\033[0m \033[2mTools %s/%s\033[0m \033[2m|\033[0m \033[2mSession: %s\033[0m' \
-    "$model" "$tokens_part" "$tool_calls_since" "$tool_calls_total" "$cumulative_fmt"
+tools_since_color=$(color_for "$tool_calls_since" 9 20)
+tools_total_color=$(color_for "$tool_calls_total" 9 20)
+tools_part=$(printf '\033[1m%bTools %s%b\033[1m%b/%b\033[1m%s%b' \
+    "$tools_since_color" "$tool_calls_since" "$RESET" \
+    "$tools_since_color" "$tools_total_color" "$tool_calls_total" "$RESET")
+
+sep=$(printf '%b|%b' "$NEON_CYAN_BOLD" "$RESET")
+model_part=$(printf '%b%s%b' "$NEON_CYAN_BOLD" "$model" "$RESET")
+
+session_part=$(printf '\033[1m%bSession: %s%b' "$NEON_PINK" "$cumulative_fmt" "$RESET")
+
+printf '%s %s %s %s %s %s %s' \
+    "$model_part" "$sep" "$tokens_part" "$sep" "$tools_part" "$sep" "$session_part"
