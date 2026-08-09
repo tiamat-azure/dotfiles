@@ -1,11 +1,9 @@
----
-name: init-agent
-description: Generate or audit a project's AGENTS.md (context file for coding agents) following best practices - concise, structured, progressive disclosure - and ensure CLAUDE.md symlinks to it, never duplicates it. Use when starting a new project without AGENTS.md, or reviewing/improving an existing one.
-argument-hint: "[project path, default: current directory]"
----
+______________________________________________________________________
 
-Help the user write (or audit) a high-quality `AGENTS.md` at the project root, then
-wire the `CLAUDE.md` symlink.
+## name: init-agent description: Generate or audit a project's AGENTS.md (context file for coding agents) following best practices - concise, structured, progressive disclosure - and ensure CLAUDE.md symlinks to it, never duplicates it. Use when starting a new project without AGENTS.md, or reviewing/improving an existing one. argument-hint: "[project path, default: current directory]"
+
+Help the user write (or audit) a high-quality `AGENTS.md` at the project root, then wire
+the `CLAUDE.md` symlink.
 
 Target project: `$ARGUMENTS` if given, else current working directory.
 
@@ -21,8 +19,8 @@ audit/refresh, not a rewrite from scratch. Then inspect the repo directly (`ls`,
 - Repo-specific code conventions (style, dependencies to avoid, module boundaries).
 - Known pitfalls (surprising behavior, past mistakes, invariants to preserve).
 
-If something isn't discoverable from the repo, ask the user directly rather than
-guessing. Don't ask about things you can verify yourself by reading files.
+If something isn't discoverable from the repo, ask the user directly rather than guessing.
+Don't ask about things you can verify yourself by reading files.
 
 ## 2. Write AGENTS.md
 
@@ -37,13 +35,13 @@ Apply these rules while writing:
 - The model attends more to the start and end of the file - keep both informative, no
   filler.
 - **Progressive disclosure**: move bulky detail (data schema, deep architecture,
-  deployment steps) to separate files (e.g. `agent_docs/`); the root file just lists
-  them with a one-line description.
-- **Pointers, not copies**: reference `file:line` instead of duplicating content that
-  will go stale.
+  deployment steps) to separate files (e.g. `agent_docs/`); the root file just lists them
+  with a one-line description.
+- **Pointers, not copies**: reference `file:line` instead of duplicating content that will
+  go stale.
 - **Nothing superfluous**: only include what applies to every task in this repo. No
-  one-off "hotfix" instructions. Don't replace a linter/formatter with prose rules -
-  point to the deterministic tooling instead.
+  one-off "hotfix" instructions. Don't replace a linter/formatter with prose rules - point
+  to the deterministic tooling instead.
 - Write in the repo's dominant language (match existing docs/instructions).
 
 ## 3. Symlink CLAUDE.md -> AGENTS.md
@@ -62,6 +60,6 @@ silently.
 
 ## 4. Report
 
-Confirm to the user: path of `AGENTS.md`, its line count, and that `CLAUDE.md` is now
-a symlink (`ls -la CLAUDE.md`). Point out anything you deliberately left out of
-`AGENTS.md` for concision, so the user can ask for it back if needed.
+Confirm to the user: path of `AGENTS.md`, its line count, and that `CLAUDE.md` is now a
+symlink (`ls -la CLAUDE.md`). Point out anything you deliberately left out of `AGENTS.md`
+for concision, so the user can ask for it back if needed.

@@ -1,7 +1,8 @@
 # RTK - Rust Token Killer
 
-Proxy CLI économisant 60 à 90 % de tokens sur les opérations de dev.
-Un hook réécrit automatiquement les commandes (`git status` devient `rtk git status`) : rien à faire côté agent.
+Proxy CLI économisant 60 à 90 % de tokens sur les opérations de dev. Un hook réécrit
+automatiquement les commandes (`git status` devient `rtk git status`) : rien à faire côté
+agent.
 
 Meta-commandes, à appeler avec `rtk` directement :
 
