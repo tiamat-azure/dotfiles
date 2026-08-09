@@ -54,6 +54,7 @@ in
     fd        # fast find
     fzf       # fuzzy finder
     jq        # json on the command line
+    perl      # utilisé par la fonction qwen pour réparer du JSON mal échappé
     lazygit
     neovim
     nerd-fonts.hack # the font everything renders in
@@ -151,12 +152,24 @@ in
           fi
           local resp
           resp="$(http POST https://tiamat-wsl.tail9a63d9.ts.net/api/chat \
-            model=qwen3-coder-16k:latest stream:=false \
+            model=qwen3:14b stream:=false \
             messages:="[{\"role\":\"user\",\"content\":$(jq -Rn --arg m "$*" '$m')}]")"
           if [ "$verbose" = 1 ]; then
             echo "$resp"
           else
-            echo "$resp" | jq -r '.message.content' | glow -
+            # Le serveur renvoie parfois du JSON invalide (retours à la ligne
+            # bruts au lieu de \n échappés dans .message.content) : on les
+            # ré-échappe avant de parser, sinon jq échoue.
+            local content
+            content="$(printf '%s' "$resp" |
+              perl -0pe 's/\r\n/\n/g; s/\n/\\n/g; s/\t/\\t/g' |
+              jq -r '.message.content' 2>/dev/null)"
+            if [ -n "$content" ]; then
+              printf '%s' "$content" | glow -
+            else
+              echo "Réponse illisible, affichage brut :" >&2
+              echo "$resp"
+            fi
           fi
         }
 
