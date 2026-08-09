@@ -62,6 +62,7 @@ in
     uv # python package/project manager
     rtk # proxy CLI qui compresse la sortie des commandes lues par les agents
     httpie # client HTTP en ligne de commande (https://httpie.io/docs/cli/universal)
+    mdformat # reformate le markdown (reflow des lignes) après édition par les agents
   ] ++ lib.optionals desktop [
     # Paquets GUI : GPU réel requis (nixGL) / session graphique. Hors WSL.
     wezterm-gl
@@ -254,6 +255,7 @@ in
     # chemin depuis RTK.md, pour rester hors du contexte injecté à chaque session.
     ".claude/rtk-troubleshooting.md".source = link "home/.claude/rtk-troubleshooting.md";
     ".claude/statusline-command.sh".source = link "home/.claude/statusline-command.sh";
+    ".claude/hooks/mdformat-on-edit.sh".source = link "home/.claude/hooks/mdformat-on-edit.sh";
 
     # Un seul AGENTS.md dans le repo, exposé sous le nom attendu par chaque agent.
     ".claude/CLAUDE.md".source = link "home/AGENTS.md";

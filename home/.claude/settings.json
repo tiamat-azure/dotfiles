@@ -71,6 +71,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/mdformat-on-edit.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
