@@ -11,10 +11,12 @@ let
 
   # mdformat nu ne comprend pas le frontmatter YAML des SKILL.md (---\nname:...\n---) :
   # il l'aplatit comme un simple paragraphe. Le plugin mdformat-frontmatter lui apprend
-  # à le laisser intact.
+  # à le laisser intact. mdformat-gfm lui apprend la syntaxe des tableaux GFM (sans lui,
+  # un tableau pipe est traité comme du texte brut et cassé au reflow).
   mdformat-with-frontmatter = pkgs.python3.withPackages (ps: [
     ps.mdformat
     ps.mdformat-frontmatter
+    ps.mdformat-gfm
   ]);
 
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
