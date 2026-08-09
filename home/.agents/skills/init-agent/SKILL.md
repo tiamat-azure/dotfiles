@@ -1,6 +1,8 @@
-______________________________________________________________________
-
-## name: init-agent description: Generate or audit a project's AGENTS.md (context file for coding agents) following best practices - concise, structured, progressive disclosure - and ensure CLAUDE.md symlinks to it, never duplicates it. Use when starting a new project without AGENTS.md, or reviewing/improving an existing one. argument-hint: "[project path, default: current directory]"
+---
+name: init-agent
+description: Generate or audit a project's AGENTS.md (context file for coding agents) following best practices - concise, structured, progressive disclosure - and ensure CLAUDE.md symlinks to it, never duplicates it. Use when starting a new project without AGENTS.md, or reviewing/improving an existing one.
+argument-hint: '[project path, default: current directory]'
+---
 
 Help the user write (or audit) a high-quality `AGENTS.md` at the project root, then wire
 the `CLAUDE.md` symlink.

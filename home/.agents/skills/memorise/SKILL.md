@@ -1,6 +1,8 @@
-______________________________________________________________________
-
-## name: memorise description: Review the current session and persist its durable facts to the project memory directory, then update MEMORY.md. Use at the end of a session, or when asked to "mémorise", "remember this session", "save what we learned". argument-hint: "[sujet à mémoriser en priorité]"
+---
+name: memorise
+description: Review the current session and persist its durable facts to the project memory directory, then update MEMORY.md. Use at the end of a session, or when asked to "mémorise", "remember this session", "save what we learned".
+argument-hint: '[sujet à mémoriser en priorité]'
+---
 
 Persist what is worth remembering from this session, and nothing else.
 

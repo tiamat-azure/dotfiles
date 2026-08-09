@@ -1,6 +1,8 @@
-______________________________________________________________________
-
-## name: git-commit-push description: Stage, commit (Conventional Commits format with emoji prefix), and push pending changes to the current branch's upstream. Use for repetitive "add + commit + push" wrap-up requests. argument-hint: "[message optionnel]"
+---
+name: git-commit-push
+description: Stage, commit (Conventional Commits format with emoji prefix), and push pending changes to the current branch's upstream. Use for repetitive "add + commit + push" wrap-up requests.
+argument-hint: '[message optionnel]'
+---
 
 Stage, commit, and push the pending changes in the current git repo.
 

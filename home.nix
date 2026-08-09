@@ -9,6 +9,14 @@ let
 
   openwhispr = pkgs.callPackage ./pkgs/openwhispr.nix { };
 
+  # mdformat nu ne comprend pas le frontmatter YAML des SKILL.md (---\nname:...\n---) :
+  # il l'aplatit comme un simple paragraphe. Le plugin mdformat-frontmatter lui apprend
+  # à le laisser intact.
+  mdformat-with-frontmatter = pkgs.python3.withPackages (ps: [
+    ps.mdformat
+    ps.mdformat-frontmatter
+  ]);
+
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
   link = path: config.lib.file.mkOutOfStoreSymlink "${dotfiles}/${path}";
 
@@ -62,7 +70,7 @@ in
     uv # python package/project manager
     rtk # proxy CLI qui compresse la sortie des commandes lues par les agents
     httpie # client HTTP en ligne de commande (https://httpie.io/docs/cli/universal)
-    mdformat # reformate le markdown (reflow des lignes) après édition par les agents
+    mdformat-with-frontmatter # reformate le markdown (reflow) sans casser le frontmatter YAML
   ] ++ lib.optionals desktop [
     # Paquets GUI : GPU réel requis (nixGL) / session graphique. Hors WSL.
     wezterm-gl
