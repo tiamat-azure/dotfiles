@@ -15,11 +15,11 @@
 @RTK.md
 
 # Agent distant Telscale (Ollama)
-- Un agent LLM distant est disponible sur le réseau privé Telscale à l'adresse `https://tiamat-wsl.tail9a63d9.ts.net/`, via l'API Ollama (`POST /api/chat`, modèle `qwen3-coder-16k:latest`).
+- Un agent LLM distant est disponible sur le réseau privé Telscale à l'adresse `https://tiamat-wsl.tail9a63d9.ts.net/`, via l'API Ollama (`POST /api/chat`, modèle `qwen3:14b`).
 - Appel type (HTTPie) :
   ```sh
   http POST https://tiamat-wsl.tail9a63d9.ts.net/api/chat \
-    model=qwen3-coder-16k:latest stream:=false \
+    model=qwen3:14b stream:=false \
     messages:="[{\"role\":\"user\",\"content\":$(jq -Rn --arg m "PROMPT" '$m')}]"
   ```
   L'alias shell `qwen` (défini dans `home.nix`) encapsule cette commande.
