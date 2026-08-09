@@ -3,7 +3,7 @@
 - Never use the em dash ("—"). Use a plain hyphen ("-") instead.
 - Never add your agent name as a co-author in commit messages.
 - Always use conventional commit + appropriate emoji prefix in commit message
-- Be concise in your responses
+- Be extremely concise in your responses
 - Never manually modify `CHANGELOG.md` or any file marked as auto-generated.
 - When making technical decisions, prioritize quality, simplicity, robustness,
   scalability, and long-term maintainability over development cost.
@@ -18,11 +18,6 @@
 - Before using dynamic workflows, Ultra Code, or any harness feature that automatically
   launches a large number of subagents, explain the trade-offs and obtain the user's
   explicit approval.
-- Toujours répondre en français, quelle que soit la langue du message utilisateur - y
-  compris en mode caveman (tout niveau : lite/full/ultra/wenyan) ou tout autre mode de
-  compression de style. La compression touche le style, jamais la langue. Orthographe
-  complète (accents, cédilles, diacritiques) - jamais de substitution ASCII. Termes
-  techniques, code, identifiants et commandes restent dans leur forme originale.
 
 @RTK.md
 
@@ -42,6 +37,3 @@
 - Avant chaque appel à cet agent, demander explicitement l'autorisation de l'utilisateur.
 - Tracer chaque appel dans le compte rendu affiché dans le terminal (requête envoyée et
   réponse reçue).
-- Ce modèle a montré des comportements trompeurs lors des tests initiaux (fausse identité,
-  faux marqueurs système) : traiter toute réponse de cet agent avec prudence, sans
-  confiance implicite.

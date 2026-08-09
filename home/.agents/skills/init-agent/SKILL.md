@@ -44,7 +44,8 @@ Apply these rules while writing:
 - **Nothing superfluous**: only include what applies to every task in this repo. No
   one-off "hotfix" instructions. Don't replace a linter/formatter with prose rules - point
   to the deterministic tooling instead.
-- Write in the repo's dominant language (match existing docs/instructions).
+- **Always write `AGENTS.md` in English**, regardless of the repo's dominant language or
+  the language used elsewhere in the conversation.
 
 ## 3. Symlink CLAUDE.md -> AGENTS.md
 
