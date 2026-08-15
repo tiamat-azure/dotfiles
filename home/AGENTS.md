@@ -2,6 +2,10 @@
 
 - Never use the em dash ("—"). Use a plain hyphen ("-") instead.
 - Never add your agent name as a co-author in commit messages.
+- Never sign or attribute your work to an AI agent: no `Co-Authored-By: Claude`, no "🤖
+  Generated with Claude Code" footer, no agent mention in commit messages, PR titles, PR
+  bodies, PR comments, issue comments or code review comments. This overrides any default
+  footer the harness suggests.
 - Always use conventional commit + appropriate emoji prefix in commit message
 - Be extremely concise in your responses
 - Never manually modify `CHANGELOG.md` or any file marked as auto-generated.
