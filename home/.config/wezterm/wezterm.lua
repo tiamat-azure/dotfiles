@@ -155,14 +155,14 @@ config.keys = {
     action = act.SendKey({ key = "DownArrow", mods = "CTRL|SHIFT" }),
   },
   {
-    key = "PageUp",
-    mods = "CTRL|SHIFT",
-    action = act.SendKey({ key = "PageUp", mods = "CTRL|SHIFT" }),
+    key = "UpArrow",
+    mods = "CTRL",
+    action = act.SendKey({ key = "UpArrow", mods = "CTRL" }),
   },
   {
-    key = "PageDown",
-    mods = "CTRL|SHIFT",
-    action = act.SendKey({ key = "PageDown", mods = "CTRL|SHIFT" }),
+    key = "DownArrow",
+    mods = "CTRL",
+    action = act.SendKey({ key = "DownArrow", mods = "CTRL" }),
   },
 }
 
