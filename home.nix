@@ -242,6 +242,7 @@ in
       m = "git switch main";
       cc = ''claude --dangerously-skip-permissions --system-prompt "Tu es un assistant de code concis et précis."'';
       co = "codex --full-auto";
+      copilot = "copilot --yolo";
     } // lib.optionalAttrs desktop {
       # Dépendent de WezTerm, herdr ou du VPN de la machine desktop : hors WSL.
       herdrw = "wezterm cli spawn --new-window -- herdr"; # herdr dans une nouvelle fenêtre WezTerm
