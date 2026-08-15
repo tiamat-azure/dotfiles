@@ -19,6 +19,25 @@ let
     ps.mdformat-gfm
   ]);
 
+  # Interpréteur Python nommé à part (pas "python3", pour ne pas entrer en
+  # collision avec le python3 par défaut du profil) exposant le module `gi`
+  # (PyGObject) avec les typelibs Gdk/Gtk. Utilisé en shebang par les scripts
+  # qui lisent l'écran via GDK, ex. my-autohotkey/linux/mouse_jiggler.py.
+  # gtk3 fournit les .typelib (Gdk-3.0...) que pygobject3 seul n'inclut pas.
+  python3-gi = pkgs.writeShellScriptBin "python3-gi" ''
+    export GI_TYPELIB_PATH="${lib.makeSearchPath "lib/girepository-1.0" [
+      pkgs.gtk3
+      pkgs.gdk-pixbuf
+      pkgs.pango.out
+      pkgs.atk
+      pkgs.cairo
+      pkgs.harfbuzz
+      pkgs.glib
+      pkgs.gobject-introspection
+    ]}''${GI_TYPELIB_PATH:+:$GI_TYPELIB_PATH}"
+    exec ${pkgs.python3.withPackages (ps: [ ps.pygobject3 ])}/bin/python3 "$@"
+  '';
+
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
   link = path: config.lib.file.mkOutOfStoreSymlink "${dotfiles}/${path}";
 
@@ -74,6 +93,7 @@ in
     httpie # client HTTP en ligne de commande (https://httpie.io/docs/cli/universal)
     mdformat-with-frontmatter # reformate le markdown (reflow) sans casser le frontmatter YAML
     tokei # stats nombre de fichiers et LOC par type de fichier
+    python3-gi # python3 + PyGObject, pour les scripts en shebang #!/usr/bin/env python3-gi
   ] ++ lib.optionals desktop [
     # Paquets GUI : GPU réel requis (nixGL) / session graphique. Hors WSL.
     wezterm-gl
