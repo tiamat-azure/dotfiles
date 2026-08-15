@@ -20,3 +20,9 @@ show_agent_labels_on_pane_borders = true
 [keys]
 next_tab = "ctrl+tab"
 previous_tab = "ctrl+shift+tab"
+focus_pane_left = "ctrl+shift+left"
+focus_pane_right = "ctrl+shift+right"
+focus_pane_up = "ctrl+shift+up"
+focus_pane_down = "ctrl+shift+down"
+next_workspace = "ctrl+shift+pagedown"
+previous_workspace = "ctrl+shift+pageup"

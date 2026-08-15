@@ -132,6 +132,38 @@ config.keys = {
     mods = "CTRL|SHIFT",
     action = act.SendKey({ key = "Tab", mods = "CTRL|SHIFT" }),
   },
+  -- Passthrough pour la navigation panes/workspaces herdr (herdr gère ses
+  -- propres panes/workspaces, distincts du multiplexeur WezTerm).
+  {
+    key = "LeftArrow",
+    mods = "CTRL|SHIFT",
+    action = act.SendKey({ key = "LeftArrow", mods = "CTRL|SHIFT" }),
+  },
+  {
+    key = "RightArrow",
+    mods = "CTRL|SHIFT",
+    action = act.SendKey({ key = "RightArrow", mods = "CTRL|SHIFT" }),
+  },
+  {
+    key = "UpArrow",
+    mods = "CTRL|SHIFT",
+    action = act.SendKey({ key = "UpArrow", mods = "CTRL|SHIFT" }),
+  },
+  {
+    key = "DownArrow",
+    mods = "CTRL|SHIFT",
+    action = act.SendKey({ key = "DownArrow", mods = "CTRL|SHIFT" }),
+  },
+  {
+    key = "PageUp",
+    mods = "CTRL|SHIFT",
+    action = act.SendKey({ key = "PageUp", mods = "CTRL|SHIFT" }),
+  },
+  {
+    key = "PageDown",
+    mods = "CTRL|SHIFT",
+    action = act.SendKey({ key = "PageDown", mods = "CTRL|SHIFT" }),
+  },
 }
 
 -- Souris
