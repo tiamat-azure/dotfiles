@@ -60,6 +60,17 @@ if [[ ${#files[@]} -eq 0 || -z "${files[0]}" ]]; then
   exit 1
 fi
 
+fmt_num() {
+  local n="$1"
+  if (( n >= 1000000 )); then
+    awk -v n="$n" 'BEGIN { printf "%.1fM", n / 1000000 }'
+  elif (( n >= 1000 )); then
+    awk -v n="$n" 'BEGIN { printf "%.1fk", n / 1000 }'
+  else
+    printf "%s" "$n"
+  fi
+}
+
 print_stats() {
   local label="$1"
   local input=0 output=0 cache_read=0 cache_creation=0 tool_calls=0
@@ -79,11 +90,11 @@ print_stats() {
   ' "${files[@]}" | wc -l)
 
   printf "\n${ORANGE}▶ %s${RESET}\n" "$label"
-  printf "${CYAN}  Input tokens        : ${GREEN}%s${RESET}\n" "$input"
-  printf "${CYAN}  Output tokens       : ${GREEN}%s${RESET}\n" "$output"
-  printf "${CYAN}  Cache read tokens   : ${VIOLET}%s${RESET}\n" "$cache_read"
-  printf "${CYAN}  Cache creation      : ${VIOLET}%s${RESET}\n" "$cache_creation"
-  printf "${CYAN}  Tool calls          : ${PINK}%s${RESET}\n" "$tool_calls"
+  printf "${CYAN}  Input tokens        : ${GREEN}%s${RESET}\n" "$(fmt_num "$input")"
+  printf "${CYAN}  Output tokens       : ${GREEN}%s${RESET}\n" "$(fmt_num "$output")"
+  printf "${CYAN}  Cache read tokens   : ${VIOLET}%s${RESET}\n" "$(fmt_num "$cache_read")"
+  printf "${CYAN}  Cache creation      : ${VIOLET}%s${RESET}\n" "$(fmt_num "$cache_creation")"
+  printf "${CYAN}  Tool calls          : ${PINK}%s${RESET}\n" "$(fmt_num "$tool_calls")"
 }
 
 for f in "${files[@]}"; do
