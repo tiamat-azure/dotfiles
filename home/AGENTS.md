@@ -19,6 +19,7 @@
 - Apply the same standard to engineering quality. If you encounter lint issues, failing
   tests, or flaky tests, address them when appropriate, even if they are unrelated to the
   current task.
+- When an audit or review reveals that the code and a documented rule disagree, never pick which one to change on your own: report the discrepancy and ask the user.
 - Before using dynamic workflows, Ultra Code, or any harness feature that automatically
   launches a large number of subagents, explain the trade-offs and obtain the user's
   explicit approval.
