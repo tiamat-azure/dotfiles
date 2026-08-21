@@ -289,6 +289,7 @@ in
     ".claude/rtk-troubleshooting.md".source = link "home/.claude/rtk-troubleshooting.md";
     ".claude/statusline-command.sh".source = link "home/.claude/statusline-command.sh";
     ".claude/hooks/mdformat-on-edit.sh".source = link "home/.claude/hooks/mdformat-on-edit.sh";
+    ".claude/scripts/show-session-log.sh".source = link "home/.claude/scripts/show-session-log.sh";
 
     # Un seul AGENTS.md dans le repo, exposé sous le nom attendu par chaque agent.
     ".claude/CLAUDE.md".source = link "home/AGENTS.md";
