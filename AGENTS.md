@@ -18,6 +18,10 @@ Flakes only see git-tracked content - `git add <file>` (staging suffices) before
 rebuild/check or it errors "not tracked by Git". No test suite; `nix flake check` is the
 closest to CI.
 
+Interactively, the `rebuild` shell alias (`~/.dotfiles/rebuild.sh && sourcez`) reloads the
+current shell afterward, so new aliases/functions are usable immediately - a script run as
+a subprocess can't otherwise touch the parent shell's environment.
+
 Always commit changes made in this repo (without pushing, unless asked otherwise) so the
 user can `./rebuild.sh` and test them.
 

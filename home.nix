@@ -220,6 +220,10 @@ in
       myip = "curl http://ipecho.net/plain; echo"; # Show my ip address
 
       sourcez = "source ~/.zshrc";
+      # Applique la config puis recharge le shell courant, pour que les nouveaux
+      # alias/fonctions soient dispo tout de suite (un script lancé en sous-process
+      # ne peut pas modifier l'environnement du shell parent).
+      rebuild = "~/.dotfiles/rebuild.sh && sourcez";
 
       # handy short cuts #
       ll = "ls -lao";

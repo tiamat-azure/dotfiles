@@ -81,6 +81,10 @@ Edit the config, then apply:
 WezTerm's config (`home/.config/wezterm/wezterm.lua`) is symlinked in place — edit it
 directly, no rebuild needed to see the change.
 
+In an interactive shell, use the `rebuild` alias instead of `./rebuild.sh` directly — it
+runs the script then `source ~/.zshrc`, so new aliases/functions are usable right away in
+the current terminal.
+
 ## Make it yours
 
 This repo is configured for one machine and one user (`2456bru`). If you clone it:
