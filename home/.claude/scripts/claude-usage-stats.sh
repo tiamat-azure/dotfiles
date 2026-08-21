@@ -71,6 +71,16 @@ fmt_num() {
   fi
 }
 
+print_block() {
+  local title="$1" input="$2" output="$3" cache_read="$4" cache_creation="$5" tool_calls="$6"
+
+  printf "${CYAN}  Input tokens        : ${GREEN}%s${RESET}\n" "$(fmt_num "$input")"
+  printf "${CYAN}  Output tokens       : ${GREEN}%s${RESET}\n" "$(fmt_num "$output")"
+  printf "${CYAN}  Cache read tokens   : ${VIOLET}%s${RESET}\n" "$(fmt_num "$cache_read")"
+  printf "${CYAN}  Cache creation      : ${VIOLET}%s${RESET}\n" "$(fmt_num "$cache_creation")"
+  printf "${CYAN}  Tool calls          : ${PINK}%s${RESET}\n" "$(fmt_num "$tool_calls")"
+}
+
 print_stats() {
   local label="$1"
   local input=0 output=0 cache_read=0 cache_creation=0 tool_calls=0
@@ -90,11 +100,34 @@ print_stats() {
   ' "${files[@]}" | wc -l)
 
   printf "\n${ORANGE}▶ %s${RESET}\n" "$label"
-  printf "${CYAN}  Input tokens        : ${GREEN}%s${RESET}\n" "$(fmt_num "$input")"
-  printf "${CYAN}  Output tokens       : ${GREEN}%s${RESET}\n" "$(fmt_num "$output")"
-  printf "${CYAN}  Cache read tokens   : ${VIOLET}%s${RESET}\n" "$(fmt_num "$cache_read")"
-  printf "${CYAN}  Cache creation      : ${VIOLET}%s${RESET}\n" "$(fmt_num "$cache_creation")"
-  printf "${CYAN}  Tool calls          : ${PINK}%s${RESET}\n" "$(fmt_num "$tool_calls")"
+  print_block "$label" "$input" "$output" "$cache_read" "$cache_creation" "$tool_calls"
+
+  mapfile -t models < <(jq -r '
+    select(.message.usage != null and .message.model != null) | .message.model
+  ' "${files[@]}" | sort -u)
+
+  if [[ ${#models[@]} -gt 1 ]]; then
+    printf "\n${ORANGE}  Par modele :${RESET}\n"
+    for model in "${models[@]}"; do
+      local m_input=0 m_output=0 m_cache_read=0 m_cache_creation=0 m_tool_calls=0
+      while IFS=$'\t' read -r i o cr cc; do
+        m_input=$((m_input + i))
+        m_output=$((m_output + o))
+        m_cache_read=$((m_cache_read + cr))
+        m_cache_creation=$((m_cache_creation + cc))
+      done < <(jq -r --arg model "$model" '
+        select(.message.usage != null and .message.model == $model) | .message.usage |
+        [.input_tokens // 0, .output_tokens // 0, .cache_read_input_tokens // 0, .cache_creation_input_tokens // 0] | @tsv
+      ' "${files[@]}")
+
+      m_tool_calls=$(jq -r --arg model "$model" '
+        select(.message.content != null and .message.model == $model) | .message.content[]? | select(.type=="tool_use") | .name
+      ' "${files[@]}" | wc -l)
+
+      printf "\n${VIOLET}  ◆ %s${RESET}\n" "$model"
+      print_block "$model" "$m_input" "$m_output" "$m_cache_read" "$m_cache_creation" "$m_tool_calls"
+    done
+  fi
 }
 
 for f in "${files[@]}"; do
