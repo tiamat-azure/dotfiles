@@ -48,3 +48,9 @@ closest to CI.
   (`@`-imported in `home/AGENTS.md`). Troubleshooting:
   `home/.claude/rtk-troubleshooting.md` (not `@`-imported, reference by path only if rtk
   misbehaves).
+- **cclog** (alias, `home/.claude/scripts/show-session-log.sh`): pretty-prints a Claude
+  Code session's tool_use/tool_result transcript from its `.jsonl` log; defaults to the
+  most recent session for the current project, or `-f <file>` for an explicit one. Parses
+  Claude Code's own session schema (`message.content[].type == tool_use|tool_result`) -
+  not a standard format, not reusable as-is for other agents (Codex, Copilot CLI, etc.
+  each log differently).
