@@ -108,6 +108,15 @@ This repo is configured for one machine and one user (`2456bru`). If you clone i
 - `home/` — the real config files that get symlinked into place (currently just
   WezTerm's).
 - `AGENTS.md` — agent policy template.
+- `home/.claude/scripts/update-readme-stats.sh` — regenerates the stats block below (see
+  "Stats block").
+
+## Stats block
+
+The "Statistiques d'usage Claude Code" section below is generated, not hand-edited.
+Refresh it with `ccstats-readme` (alias for
+`~/.claude/scripts/update-readme-stats.sh ~/.dotfiles/README.md`), which rewrites the
+content between the `<!-- STATS:START -->` / `<!-- STATS:END -->` markers in place.
 
 ## How the symlink works
 
@@ -116,6 +125,32 @@ config. `home.nix` uses `mkOutOfStoreSymlink` to point `~/.config/wezterm` strai
 `home/.config/wezterm` in this repo, so the two never drift out of sync. You only need
 `./rebuild.sh` for changes that aren't a symlinked file, like a package list or a `dconf`
 setting.
+
+<!-- STATS:START -->
+
+<!-- Genere automatiquement par update-readme-stats.sh - ne pas editer a la main -->
+
+## Statistiques d'usage Claude Code
+
+_Cumul de toutes les sessions, tous projets - derniere mise a jour : 2026-08-22 10:26_
+
+| Metrique              | Total  |
+| --------------------- | ------ |
+| Input tokens          | 242.3k |
+| Output tokens         | 4.8M   |
+| Cache read tokens     | 680.9M |
+| Cache creation tokens | 32.9M  |
+| Tool calls            | 6.4k   |
+
+### Par modele
+
+| Modele                    | Input  | Output | Cache read | Cache creation | Tool calls |
+| ------------------------- | ------ | ------ | ---------- | -------------- | ---------- |
+| claude-haiku-4-5-20251001 | 2.1k   | 21.3k  | 3.0M       | 259.4k         | 38         |
+| claude-opus-5             | 130.6k | 1.4M   | 174.8M     | 6.2M           | 1.3k       |
+| claude-sonnet-5           | 109.7k | 3.4M   | 503.1M     | 26.4M          | 5.1k       |
+
+<!-- STATS:END -->
 
 ## License
 

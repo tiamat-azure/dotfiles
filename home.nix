@@ -245,6 +245,7 @@ in
       copilot = "copilot --yolo";
       cclog = "~/.claude/scripts/show-session-log.sh";
       ccstats = "~/.claude/scripts/claude-usage-stats.sh";
+      ccstats-readme = "~/.claude/scripts/update-readme-stats.sh ~/.dotfiles/README.md";
     } // lib.optionalAttrs desktop {
       # Dépendent de WezTerm, herdr ou du VPN de la machine desktop : hors WSL.
       herdrw = "wezterm cli spawn --new-window -- herdr"; # herdr dans une nouvelle fenêtre WezTerm
@@ -292,6 +293,7 @@ in
     ".claude/hooks/mdformat-on-edit.sh".source = link "home/.claude/hooks/mdformat-on-edit.sh";
     ".claude/scripts/show-session-log.sh".source = link "home/.claude/scripts/show-session-log.sh";
     ".claude/scripts/claude-usage-stats.sh".source = link "home/.claude/scripts/claude-usage-stats.sh";
+    ".claude/scripts/update-readme-stats.sh".source = link "home/.claude/scripts/update-readme-stats.sh";
 
     # Un seul AGENTS.md dans le repo, exposé sous le nom attendu par chaque agent.
     ".claude/CLAUDE.md".source = link "home/AGENTS.md";
