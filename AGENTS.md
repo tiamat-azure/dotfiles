@@ -18,6 +18,9 @@ Flakes only see git-tracked content - `git add <file>` (staging suffices) before
 rebuild/check or it errors "not tracked by Git". No test suite; `nix flake check` is the
 closest to CI.
 
+Always commit changes made in this repo (without pushing, unless asked otherwise) so the
+user can `./rebuild.sh` and test them.
+
 ## Architecture
 
 - `flake.nix`: declares `homeConfigurations` per machine, all built from `home.nix`
