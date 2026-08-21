@@ -57,3 +57,6 @@ user can `./rebuild.sh` and test them.
   Claude Code's own session schema (`message.content[].type == tool_use|tool_result`) -
   not a standard format, not reusable as-is for other agents (Codex, Copilot CLI, etc.
   each log differently).
+- **ccstats** (alias, `home/.claude/scripts/claude-usage-stats.sh`): agrège les stats de
+  tokens/tool calls des sessions Claude Code (`~/.claude/projects/**/*.jsonl`), ventilées
+  par modèle, chiffres formatés en k/M.
