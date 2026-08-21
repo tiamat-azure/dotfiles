@@ -243,6 +243,7 @@ in
       cc = ''claude --dangerously-skip-permissions --system-prompt "Tu es un assistant de code concis et précis."'';
       co = "codex --full-auto";
       copilot = "copilot --yolo";
+      cclog = "~/.claude/scripts/show-session-log.sh";
     } // lib.optionalAttrs desktop {
       # Dépendent de WezTerm, herdr ou du VPN de la machine desktop : hors WSL.
       herdrw = "wezterm cli spawn --new-window -- herdr"; # herdr dans une nouvelle fenêtre WezTerm
