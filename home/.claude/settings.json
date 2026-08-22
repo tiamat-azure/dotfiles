@@ -18,7 +18,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus",
+  "model": "sonnet",
   "disableClaudeAiConnectors": true,
   "disableBundledSkills": true,
   "hooks": {
@@ -94,8 +94,17 @@
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
   },
+  "enabledPlugins": {},
   "language": "fr",
-  "effortLevel": "low",
+  "effortLevel": "high",
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "high"
+    },
+    "claude-sonnet-5": {
+      "effortLevel": "low"
+    }
+  },
   "voice": {
     "enabled": true,
     "mode": "hold"
@@ -103,6 +112,6 @@
   "autoMemoryEnabled": false,
   "skipDangerousModePermissionPrompt": true,
   "theme": "auto",
-  "voiceEnabled": true,
-  "enabledPlugins": {}
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true
 }

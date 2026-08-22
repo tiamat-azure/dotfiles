@@ -263,8 +263,8 @@ in
       hreload = "herdr server reload-config";
 
       # token-hud : widget PyQt6, lancé détaché pour rendre le terminal.
-      hud-start = "nohup uv run --project ${config.home.homeDirectory}/workspaces/tiamat-azure/token-hud python -m token_hud >/dev/null 2>&1 &";
-      hud-stop = "pkill -f 'python -m token_hud'";
+      hud-start = "make -C ${config.home.homeDirectory}/workspaces/tiamat-azure/token-hud start";
+      hud-stop = "make -C ${config.home.homeDirectory}/workspaces/tiamat-azure/token-hud stop";
     };
   };
 
