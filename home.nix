@@ -225,6 +225,11 @@ in
       # ne peut pas modifier l'environnement du shell parent).
       rebuild = "~/.dotfiles/rebuild.sh && sourcez";
 
+      # Redemarre la pile audio PipeWire/WirePlumber quand le son est muet
+      # (WirePlumber sonde parfois la carte SOF avant que son firmware soit
+      # pret au boot : plus aucun sink reel, seul un "Dummy Output" subsiste).
+      fixsound = "systemctl --user restart wireplumber pipewire pipewire-pulse";
+
       # handy short cuts #
       ll = "ls -lao";
       c = "clear";
