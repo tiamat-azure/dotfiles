@@ -98,11 +98,9 @@
   "language": "fr",
   "effortLevel": "high",
   "modelSettings": {
-    "claude-opus-5": {
-      "effortLevel": "high"
-    },
+    "claude-opus-5": {},
     "claude-sonnet-5": {
-      "effortLevel": "low"
+      "effortLevel": "high"
     }
   },
   "voice": {
