@@ -64,3 +64,15 @@ user can `./rebuild.sh` and test them.
 - **ccstats** (alias, `home/.claude/scripts/claude-usage-stats.sh`): agrège les stats de
   tokens/tool calls des sessions Claude Code (`~/.claude/projects/**/*.jsonl`), ventilées
   par modèle, chiffres formatés en k/M.
+- **Agents CLI tiers** (`home.activation` dans `home.nix`, pas des paquets nixpkgs) :
+  - `grok` (xAI) : npm `@xai-official/grok`, réinstallé à chaque switch avec les CLIs AXI.
+    Config `~/.grok/config.toml`, auth navigateur au premier lancement (ou `XAI_API_KEY`),
+    abonnement SuperGrok / X Premium+ requis.
+  - `agent` (Cursor CLI, alias `cursor-agent`) : installeur `cursor.com/install`, joué
+    seulement si `~/.local/bin/agent` manque (il re-télécharge ~100 Mo sinon). Mise à jour
+    manuelle : `agent update`.
+- **PATH d'activation**: les blocs `home.activation` tournent avec un PATH réduit à
+  quelques dérivations du store (pas de `/usr/bin`). `nvm.sh` s'y source sans erreur mais
+  son auto-use échoue en silence faute d'`awk`, et le bloc npm devient un no-op - d'où le
+  `export PATH` explicite en tête de `installAgentTools`. Toute activation qui appelle un
+  outil hors nixpkgs doit faire pareil.

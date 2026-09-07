@@ -120,19 +120,50 @@ in
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
 
+  # ~/.local/bin : destination des installeurs maison hors Nix (Claude Code, Cursor CLI...).
+  # Ubuntu ne l'ajoute au PATH que via ~/.profile, non lu par zsh : on le déclare ici pour
+  # que ces binaires soient là quelle que soit la façon dont le shell est lancé. Placé avant
+  # que .zshrc ne source nvm, donc node/npm restent servis par nvm et non par les shims.
+  home.sessionPath = [ "$HOME/.local/bin" ];
+
   programs.home-manager.enable = true;
 
   # Outils absents de nixpkgs, réinstallés à chaque switch pour rester reproductibles :
   # - gh-axi / chrome-devtools-axi / lavish-axi (npm, via nvm) : CLIs "AXI" de kunchenguid
   #   utilisées par les hooks/skills Claude Code (voir home/.claude/settings.json et skills).
+  # - @xai-official/grok (npm, via nvm) : agent CLI xAI, fournit le binaire `grok`.
+  #   Paquet officiel (mainteneur security@x.ai), préféré au `curl x.ai/cli/install.sh | bash`
+  #   qui pose un binaire opaque hors de toute gestion de version.
   home.activation.installAgentTools = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # Le PATH d'activation ne contient qu'une poignée de dérivations du store, sans
+    # `awk` : nvm.sh se source alors sans erreur mais son auto-use échoue en silence
+    # et node/npm n'atterrissent jamais dans le PATH (le bloc devenait un no-op).
+    # On lui fournit donc ses dépendances explicitement.
+    export PATH="${lib.makeBinPath [ pkgs.gawk pkgs.coreutils pkgs.gnused pkgs.gnugrep pkgs.curl ]}:$PATH"
     export NVM_DIR="$HOME/.nvm"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
       \. "$NVM_DIR/nvm.sh"
       if command -v npm >/dev/null; then
         $VERBOSE_ECHO "Installation des CLIs AXI (gh-axi, chrome-devtools-axi, lavish-axi) via npm"
         $DRY_RUN_CMD npm install -g gh-axi chrome-devtools-axi lavish-axi
+        $VERBOSE_ECHO "Installation de l'agent CLI Grok (@xai-official/grok) via npm"
+        $DRY_RUN_CMD npm install -g --allow-scripts=@xai-official/grok @xai-official/grok
       fi
+    fi
+  '';
+
+  # Cursor CLI : pas de paquet npm officiel (`cursor-agent` sur npm appartient à un tiers),
+  # seul l'installeur maison existe. Il pose une version figée dans
+  # ~/.local/share/cursor-agent/versions/<v> et symlinke ~/.local/bin/{agent,cursor-agent}.
+  # Contrairement à npm il re-télécharge ~100 Mo à chaque exécution : on ne le rejoue donc
+  # pas à chaque switch, seulement si le binaire manque. Mise à jour : `agent update`.
+  home.activation.installCursorAgent = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # L'installeur suppose curl/tar/gzip présents : on les fournit depuis le store
+    # plutôt que de dépendre de ce qu'Ubuntu expose dans le PATH d'activation.
+    export PATH="${lib.makeBinPath [ pkgs.curl pkgs.gnutar pkgs.gzip pkgs.coreutils ]}:$PATH"
+    if [ ! -e "$HOME/.local/bin/agent" ]; then
+      $VERBOSE_ECHO "Installation de l'agent CLI Cursor (installeur cursor.com)"
+      $DRY_RUN_CMD ${pkgs.bash}/bin/bash -c "curl -fsS https://cursor.com/install | ${pkgs.bash}/bin/bash"
     fi
   '';
 
