@@ -44,7 +44,7 @@ let
   # Les skills vivent une seule fois dans le repo, mais chaque agent les cherche
   # dans son propre répertoire : ~/.agents/skills pour les agents génériques,
   # ~/.claude/skills pour Claude Code. D'où les deux liens par skill.
-  skills = [ "git-commit-push" "memorise" "init-agent" ];
+  skills = [ "git-commit-push" "memorise" "init-agent" "design-showcase" ];
   skillLinks = lib.listToAttrs (lib.concatMap
     (skill: [
       (lib.nameValuePair ".agents/skills/${skill}" { source = link "home/.agents/skills/${skill}"; })
