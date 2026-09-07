@@ -299,6 +299,7 @@ in
       copilot = "copilot --yolo";
       cclog = "~/.claude/scripts/show-session-log.sh";
       ccstats = "~/.claude/scripts/claude-usage-stats.sh";
+      quota = "quota-axi --provider claude,cursor,grok,copilot --tui";
     } // lib.optionalAttrs desktop {
       # Dépendent de WezTerm, herdr ou du VPN de la machine desktop : hors WSL.
       herdrw = "wezterm cli spawn --new-window -- herdr"; # herdr dans une nouvelle fenêtre WezTerm
