@@ -68,6 +68,11 @@ user can `./rebuild.sh` and test them.
   - `grok` (xAI) : npm `@xai-official/grok`, réinstallé à chaque switch avec les CLIs AXI.
     Config `~/.grok/config.toml`, auth navigateur au premier lancement (ou `XAI_API_KEY`),
     abonnement SuperGrok / X Premium+ requis.
+  - Ces paquets npm sont posés avec `--prefix ~/.local`, jamais dans le préfixe global de
+    nvm : celui-ci dépend de la version node active, qui diffère entre l'activation (PATH
+    propre, donc alias `default`) et les shells de l'utilisateur (nvm garde la version
+    héritée du PATH de session). Un `npm install -g` nu atterrit dans un préfixe invisible
+    depuis le terminal.
   - `agent` (Cursor CLI, alias `cursor-agent`) : installeur `cursor.com/install`, joué
     seulement si `~/.local/bin/agent` manque (il re-télécharge ~100 Mo sinon). Mise à jour
     manuelle : `agent update`.

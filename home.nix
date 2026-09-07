@@ -129,11 +129,11 @@ in
   programs.home-manager.enable = true;
 
   # Outils absents de nixpkgs, réinstallés à chaque switch pour rester reproductibles :
-  # - gh-axi / chrome-devtools-axi / lavish-axi (npm, via nvm) : CLIs "AXI" de kunchenguid
-  #   utilisées par les hooks/skills Claude Code (voir home/.claude/settings.json et skills).
-  # - @xai-official/grok (npm, via nvm) : agent CLI xAI, fournit le binaire `grok`.
-  #   Paquet officiel (mainteneur security@x.ai), préféré au `curl x.ai/cli/install.sh | bash`
-  #   qui pose un binaire opaque hors de toute gestion de version.
+  # - gh-axi / chrome-devtools-axi / lavish-axi : CLIs "AXI" de kunchenguid utilisées par
+  #   les hooks/skills Claude Code (voir home/.claude/settings.json et skills).
+  # - @xai-official/grok : agent CLI xAI, fournit le binaire `grok`. Paquet officiel
+  #   (mainteneur security@x.ai), préféré au `curl x.ai/cli/install.sh | bash` qui pose un
+  #   binaire opaque hors de toute gestion de version.
   home.activation.installAgentTools = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     # Le PATH d'activation ne contient qu'une poignée de dérivations du store, sans
     # `awk` : nvm.sh se source alors sans erreur mais son auto-use échoue en silence
@@ -144,10 +144,16 @@ in
     if [ -s "$NVM_DIR/nvm.sh" ]; then
       \. "$NVM_DIR/nvm.sh"
       if command -v npm >/dev/null; then
+        # --prefix ~/.local plutôt que le préfixe global de nvm : celui-ci dépend de la
+        # version node active, et elle diffère entre l'activation (PATH propre -> alias
+        # `default`) et les shells de l'utilisateur (nvm conserve la version déjà
+        # présente dans le PATH hérité de la session). Les binaires atterrissaient donc
+        # dans un préfixe invisible depuis le terminal. ~/.local/bin est stable et déjà
+        # déclaré dans home.sessionPath ; les shims npm trouvent node via leur shebang.
         $VERBOSE_ECHO "Installation des CLIs AXI (gh-axi, chrome-devtools-axi, lavish-axi) via npm"
-        $DRY_RUN_CMD npm install -g gh-axi chrome-devtools-axi lavish-axi
+        $DRY_RUN_CMD npm install -g --prefix "$HOME/.local" gh-axi chrome-devtools-axi lavish-axi
         $VERBOSE_ECHO "Installation de l'agent CLI Grok (@xai-official/grok) via npm"
-        $DRY_RUN_CMD npm install -g --allow-scripts=@xai-official/grok @xai-official/grok
+        $DRY_RUN_CMD npm install -g --prefix "$HOME/.local" --allow-scripts=@xai-official/grok @xai-official/grok
       fi
     fi
   '';
