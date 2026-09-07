@@ -120,6 +120,14 @@ in
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
 
+  # Le réseau intercepte le TLS et resigne les certificats avec une CA racine
+  # d'entreprise, présente dans le magasin système mais pas dans le magasin CA
+  # embarqué de Node. curl passe (il lit NIX_SSL_CERT_FILE), Node échoue en
+  # SELF_SIGNED_CERT_IN_CHAIN : les CLIs Node voient leurs appels HTTPS tomber en
+  # « fetch failed » (constaté sur cursor.sh, grok.com et x.ai via quota-axi).
+  # Node ne lit que NODE_EXTRA_CA_CERTS, on lui désigne donc le magasin système.
+  home.sessionVariables.NODE_EXTRA_CA_CERTS = "/etc/ssl/certs/ca-certificates.crt";
+
   # ~/.local/bin : destination des installeurs maison hors Nix (Claude Code, Cursor CLI...).
   # Ubuntu ne l'ajoute au PATH que via ~/.profile, non lu par zsh : on le déclare ici pour
   # que ces binaires soient là quelle que soit la façon dont le shell est lancé. Placé avant
