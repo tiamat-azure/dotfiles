@@ -9,6 +9,14 @@ let
 
   openwhispr = pkgs.callPackage ./pkgs/openwhispr.nix { };
 
+  # sudo invoqué hors TTY (agent CLI, entrée .desktop, hook) ne peut pas demander
+  # le mot de passe et échoue sur « a terminal is required to authenticate ».
+  # SUDO_ASKPASS lui désigne ce helper, qui l'invite via une boîte de dialogue.
+  # ssh-askpass n'est pas installé sur la machine, on passe par zenity.
+  sudo-askpass = pkgs.writeShellScriptBin "sudo-askpass" ''
+    exec ${pkgs.zenity}/bin/zenity --password --title="sudo"
+  '';
+
   # mdformat nu ne comprend pas le frontmatter YAML des SKILL.md (---\nname:...\n---) :
   # il l'aplatit comme un simple paragraphe. Le plugin mdformat-frontmatter lui apprend
   # à le laisser intact. mdformat-gfm lui apprend la syntaxe des tableaux GFM (sans lui,
@@ -86,6 +94,7 @@ in
     # Paquets GUI : GPU réel requis (nixGL) / session graphique. Hors WSL.
     wezterm-gl
     openwhispr
+    sudo-askpass # helper graphique de saisie du mot de passe sudo (voir SUDO_ASKPASS)
     pkgs-unstable.herdr # absent du channel stable pinné, pris sur nixpkgs-unstable
   ];
 
@@ -106,15 +115,21 @@ in
     };
   };
   fonts.fontconfig.enable = true;
-  home.sessionVariables.EDITOR = "nvim";
+  home.sessionVariables = {
+    EDITOR = "nvim";
 
-  # Le réseau intercepte le TLS et resigne les certificats avec une CA racine
-  # d'entreprise, présente dans le magasin système mais pas dans le magasin CA
-  # embarqué de Node. curl passe (il lit NIX_SSL_CERT_FILE), Node échoue en
-  # SELF_SIGNED_CERT_IN_CHAIN : les CLIs Node voient leurs appels HTTPS tomber en
-  # « fetch failed » (constaté sur cursor.sh, grok.com et x.ai via quota-axi).
-  # Node ne lit que NODE_EXTRA_CA_CERTS, on lui désigne donc le magasin système.
-  home.sessionVariables.NODE_EXTRA_CA_CERTS = "/etc/ssl/certs/ca-certificates.crt";
+    # Le réseau intercepte le TLS et resigne les certificats avec une CA racine
+    # d'entreprise, présente dans le magasin système mais pas dans le magasin CA
+    # embarqué de Node. curl passe (il lit NIX_SSL_CERT_FILE), Node échoue en
+    # SELF_SIGNED_CERT_IN_CHAIN : les CLIs Node voient leurs appels HTTPS tomber en
+    # « fetch failed » (constaté sur cursor.sh, grok.com et x.ai via quota-axi).
+    # Node ne lit que NODE_EXTRA_CA_CERTS, on lui désigne donc le magasin système.
+    NODE_EXTRA_CA_CERTS = "/etc/ssl/certs/ca-certificates.crt";
+  } // lib.optionalAttrs desktop {
+    # Suppose une session graphique : inutile (et zenity inutilement tiré dans la
+    # closure) sous WSL. `sudo -A <cmd>` ouvre alors la fenêtre de saisie.
+    SUDO_ASKPASS = "${sudo-askpass}/bin/sudo-askpass";
+  };
 
   # ~/.local/bin : destination des installeurs maison hors Nix (Claude Code, Cursor CLI...).
   # Ubuntu ne l'ajoute au PATH que via ~/.profile, non lu par zsh : on le déclare ici pour
