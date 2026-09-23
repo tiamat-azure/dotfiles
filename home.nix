@@ -81,6 +81,7 @@ in
     jq        # json on the command line
     perl      # utilisé par la fonction qwen pour réparer du JSON mal échappé
     lazygit
+    git-lfs # stockage des gros binaires hors du repo (assets Unity...), filtres dans ~/.config/git/config
     neovim
     nerd-fonts.hack # the font everything renders in
     wl-clipboard # nvim's unnamedplus clipboard, needed on Wayland
@@ -356,6 +357,16 @@ in
     ".codex/AGENTS.md".source = link "home/AGENTS.md";
     ".config/opencode/AGENTS.md".source = link "home/AGENTS.md";
   } // skillLinks;
+
+  # Équivalent déclaratif de `git lfs install` : filtres LFS dans le fichier de config
+  # XDG de git, lu en plus de ~/.gitconfig (laissé non géré : identité, credentials).
+  xdg.configFile."git/config".text = ''
+    [filter "lfs"]
+    	clean = git-lfs clean -- %f
+    	smudge = git-lfs smudge -- %f
+    	process = git-lfs filter-process
+    	required = true
+  '';
 
   # Équivalent GNOME des system.defaults de nix-darwin (dark mode, dock, trackpad...).
   # Réservé aux machines desktop : pas de session GNOME/dbus sous WSL.
