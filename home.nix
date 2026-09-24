@@ -291,6 +291,9 @@ in
       # alias/fonctions soient dispo tout de suite (un script lancé en sous-process
       # ne peut pas modifier l'environnement du shell parent).
       rebuild = "~/.dotfiles/rebuild.sh && sourcez";
+      # Met à jour Nix (flake + switch), apt, snap, nettoie le store Nix,
+      # puis commite et pousse flake.lock.
+      upgrade-sys = "~/.dotfiles/upgrade-sys.sh && sourcez";
 
       # Redemarre la pile audio PipeWire/WirePlumber quand le son est muet
       # (WirePlumber sonde parfois la carte SOF avant que son firmware soit

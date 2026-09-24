@@ -12,6 +12,7 @@ Nix + home-manager dotfiles (standalone, no NixOS/nix-darwin), for Ubuntu 26, us
 ```sh
 ./rebuild.sh                 # apply: symlinks repo to ~/.dotfiles, runs `home-manager switch`
 nix flake check --no-build   # validate without applying
+./upgrade-sys.sh             # full upgrade: flake update + switch, apt, snap, nix gc, push flake.lock
 ```
 
 Flakes only see git-tracked content - `git add <file>` (staging suffices) before
