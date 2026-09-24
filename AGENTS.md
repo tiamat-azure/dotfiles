@@ -76,6 +76,10 @@ user can `./rebuild.sh` and test them.
   - `agent` (Cursor CLI, alias `cursor-agent`) : installeur `cursor.com/install`, joué
     seulement si `~/.local/bin/agent` manque (il re-télécharge ~100 Mo sinon). Mise à jour
     manuelle : `agent update`.
+- **Unity / libxml2** : les éditeurs Unity 6000.6+ exigent `libxml2.so.2`, absent d'Ubuntu
+  26.04. L'activation `unityLibxml2` (desktop) pose un lien vers `libxml2_13` dans chaque
+  `~/Unity/Hub/Editor/*/Editor` (RUNPATH `$ORIGIN`). Nouvel éditeur installé via Hub :
+  relancer `./rebuild.sh`.
 - **PATH d'activation**: les blocs `home.activation` tournent avec un PATH réduit à
   quelques dérivations du store (pas de `/usr/bin`). `nvm.sh` s'y source sans erreur mais
   son auto-use échoue en silence faute d'`awk`, et le bloc npm devient un no-op - d'où le

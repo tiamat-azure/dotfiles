@@ -185,6 +185,24 @@ in
     fi
   '';
 
+  # Les éditeurs Unity récents (6000.6+) sont liés à libxml2.so.2, qu'Ubuntu 26.04 ne
+  # fournit plus (seulement libxml2.so.16, ABI incompatible) : ils refusent de démarrer,
+  # y compris depuis Unity Hub. Leur RUNPATH contient $ORIGIN, on dépose donc un lien
+  # libxml2.so.2 à côté de chaque binaire Editor/Unity, pointant vers libxml2 2.13 du store.
+  # Référencer le paquet ici le garde dans la closure de la génération (pas de GC), sans
+  # l'ajouter à home.packages (son xmllint masquerait celui du système).
+  # Un éditeur installé après le switch n'est couvert qu'au rebuild suivant.
+  home.activation.unityLibxml2 = lib.mkIf desktop (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for editor in "$HOME"/Unity/Hub/Editor/*/Editor; do
+      [ -x "$editor/Unity" ] || continue
+      target="$editor/libxml2.so.2"
+      # Ne jamais écraser un vrai fichier que Unity livrerait lui-même.
+      if [ -e "$target" ] && [ ! -L "$target" ]; then continue; fi
+      $VERBOSE_ECHO "Lien libxml2.so.2 pour $editor"
+      $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln -sfn ${pkgs.libxml2_13.out}/lib/libxml2.so.2 "$target"
+    done
+  '');
+
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;      # ghost text from history
